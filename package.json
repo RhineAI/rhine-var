@@ -1,6 +1,6 @@
 {
   "name": "rhine-var",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "description": "Variables that support multi-user collaboration and persistence, making collaboration and variable operations as simple as possible, with strict and well-defined type hints.",
   "exports": {
     ".": "./dist/index.js",
@@ -39,12 +39,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/RhineAI-Lab/rhine-var.git"
+    "url": "https://github.com/RhineAI/rhine-var.git"
   },
   "bugs": {
-    "url": "https://github.com/RhineAI-Lab/rhine-var/issues"
+    "url": "https://github.com/RhineAI/rhine-var/issues"
   },
-  "homepage": "https://github.com/RhineAI-Lab/rhine-var#readme",
+  "homepage": "https://github.com/RhineAI/rhine-var#readme",
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",

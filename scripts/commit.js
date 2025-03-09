@@ -6,7 +6,7 @@ const path = require('path')
 const fs = require('fs')
 
 const PROJECT_PATH = path.resolve(__dirname, '../')
-const ACTIONS_URL = 'https://github.com/RhineAI-Lab/rhine-var/actions'
+const ACTIONS_URL = 'https://github.com/RhineAI/rhine-var/actions'
 
 function checkPackageJson(projectPath) {
   if (!fs.existsSync(path.join(projectPath, 'package.json'))) {

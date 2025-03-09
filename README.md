@@ -31,7 +31,7 @@ Try: [https://rv.rhineai.com/examples/counter](https://rv.rhineai.com/examples/c
 
 **Document:** [LEARN.md](assets/documents/LEARN.md)
 
-**Github:** [https://github.com/RhineAI-Lab/rhine-var](https://github.com/RhineAI-Lab/rhine-var)
+**Github:** [https://github.com/RhineAI/rhine-var](https://github.com/RhineAI/rhine-var)
 
 **Npm:** [https://www.npmjs.com/package/rhine-var](https://www.npmjs.com/package/rhine-var)
 
@@ -189,13 +189,13 @@ server.listen()
 
 We also provide a more complete [Hocuspocus](https://tiptap.dev/docs/hocuspocus/introduction) server (link below), which supports pre-authorization for connections and the ability to store data in a database.
 
-Best Implementation: [https://github.com/RhineAI-Lab/rhine-var-hocuspocus-server](https://github.com/RhineAI-Lab/rhine-var-hocuspocus-server)
+Best Implementation: [https://github.com/RhineAI/rhine-var-hocuspocus-server](https://github.com/RhineAI/rhine-var-hocuspocus-server)
 
 <br/>
 
 Original server-side development reference: [https://docs.yjs.dev/ecosystem/connection-provider/y-websocket](https://docs.yjs.dev/ecosystem/connection-provider/y-websocket)
 
-And we also provide the original Yjs WebSocket server example: [https://github.com/RhineAI-Lab/rhine-var-server](https://github.com/RhineAI-Lab/rhine-var-server)
+And we also provide the original Yjs WebSocket server example: [https://github.com/RhineAI/rhine-var-server](https://github.com/RhineAI/rhine-var-server)
 
 
 ## Develop

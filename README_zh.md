@@ -30,7 +30,7 @@ Try: [https://rv.rhineai.com/examples/counter](https://rv.rhineai.com/examples/c
 
 **Document:** [LEARN_zh.md](assets/documents/LEARN_zh.md)
 
-**Github:** [https://github.com/RhineAI-Lab/rhine-var](https://github.com/RhineAI-Lab/rhine-var)
+**Github:** [https://github.com/RhineAI/rhine-var](https://github.com/RhineAI/rhine-var)
 
 **Npm:** [https://www.npmjs.com/package/rhine-var](https://www.npmjs.com/package/rhine-var)
 
@@ -203,13 +203,13 @@ server.listen()
 ```
 我们还提供了一个更完整的 [Hocuspocus](https://tiptap.dev/docs/hocuspocus/introduction) 服务器 (下方链接)，支持连接前鉴权，以及将数据持久化到数据库中。
 
-Best Implementation: [https://github.com/RhineAI-Lab/rhine-var-hocuspocus-server](https://github.com/RhineAI-Lab/rhine-var-hocuspocus-server)
+Best Implementation: [https://github.com/RhineAI/rhine-var-hocuspocus-server](https://github.com/RhineAI/rhine-var-hocuspocus-server)
 
 <br/>
 
 原生服务端开发信息请参考: [https://docs.yjs.dev/ecosystem/connection-provider/y-websocket](https://docs.yjs.dev/ecosystem/connection-provider/y-websocket)
 
-以及我们提供的原生 Yjs  Websocket 服务器的示例: [https://github.com/RhineAI-Lab/rhine-var-server](https://github.com/RhineAI-Lab/rhine-var-server)
+以及我们提供的原生 Yjs  Websocket 服务器的示例: [https://github.com/RhineAI/rhine-var-server](https://github.com/RhineAI/rhine-var-server)
 
 <br/>
 

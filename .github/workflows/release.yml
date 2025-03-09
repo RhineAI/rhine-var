@@ -122,13 +122,13 @@ jobs:
         run: |
           sudo apt-get install -y jq
           cp package.json package.json.bak
-          jq '.name = "@RhineAI-Lab/\(.name)" | .repository.url = "git+https://github.com/RhineAI-Lab/rhine-var.git"' package.json > package.json.tmp
+          jq '.name = "@RhineAI/\(.name)" | .repository.url = "git+https://github.com/RhineAI/rhine-var.git"' package.json > package.json.tmp
           mv package.json.tmp package.json
           jq empty package.json   
 
       - name: Configure npm Registry
         run: |
-          npm config set @RhineAI-Lab:registry=https://npm.pkg.github.com
+          npm config set @RhineAI:registry=https://npm.pkg.github.com
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
 
       - name: Publish to Github
