@@ -3,6 +3,6 @@ import {NativeType} from "@/core/native/native-type.enum";
 
 export default class RhineVarXmlFragment extends RhineVarBase {
 
-  type: NativeType.XmlFragment = NativeType.XmlFragment
+  _type: NativeType.XmlFragment = NativeType.XmlFragment
 
 }

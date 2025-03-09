@@ -3,7 +3,7 @@ import { NativeType } from '@/core/native/native-type.enum';
 
 export default class RhineVarText extends RhineVarBase implements Iterable<string> {
 
-  type: NativeType.Text = NativeType.Text
+  _type: NativeType.Text = NativeType.Text
 
   value: string = ''
 

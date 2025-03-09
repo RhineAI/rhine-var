@@ -1,16 +1,10 @@
-import {YDoc, YMap, YArray, YText} from "@/index"
+import {YArray, YDoc, YMap, YText} from "@/index"
 import Connector from "@/core/connector/connector.abstract";
 import RhineVarBase, {RHINE_VAR_PREDEFINED_PROPERTIES} from "@/core/var/rhine-var-base.class";
 import {error, log} from "@/utils/logger";
-import {StoredRhineVar, RhineVarAny} from "@/core/var/rhine-var.type";
+import {RhineVarAny, StoredRhineVar} from "@/core/var/rhine-var.type";
 import {Native} from "@/core/native/native.type";
-import {
-  isNative,
-  nativeDelete,
-  nativeHas,
-  nativeOwnKeys,
-  nativeSet
-} from "@/core/utils/native.utils";
+import {isNative, nativeDelete, nativeHas, nativeOwnKeys, nativeSet} from "@/core/utils/native.utils";
 import {createConnector} from "@/core/connector/create-connector";
 import {createRhineVar} from "@/core/proxy/create-rhine-var";
 import {ensureNative, ensureRhineVar} from "@/core/utils/var.utils";
@@ -43,8 +37,8 @@ export function rhineProxy<T extends object>(
   connector = connector as Connector;
 
   const root = object as any
-  root.options = options
-  root.connector = connector
+  root._options = options
+  root._connector = connector
 
   // Bind connector
   connector.subscribeSynced((synced: boolean) => {
@@ -54,7 +48,7 @@ export function rhineProxy<T extends object>(
     if (!connector.hasState()) {
       connector.setState(object.native.clone())
     }
-    object.initialize(connector.getState())
+    (object as any)._initialize(connector.getState())
   })
 
   return object
@@ -146,18 +140,14 @@ export function rhineProxyGeneral<T extends object>(
 
       value = ensureRhineVar(value, object)
 
-      let result = nativeSet(object.native, p, value)
-      if (!result) error('Failed to set value')
-      return result
+      return nativeSet(object.native, p, value)
     },
 
     deleteProperty(proxy: RhineVarBase<T>, p: string | symbol): boolean {
       if (RHINE_VAR_PREDEFINED_PROPERTIES.has(p)) return false
       log('Proxy.handler.deleteProperty:', p)
 
-      let result = nativeDelete(object.native, p)
-      if (!result) error('Failed to delete value')
-      return result
+      return nativeDelete(object.native, p)
     },
 
     has(proxy: RhineVarBase<T>, p: string | symbol): boolean {

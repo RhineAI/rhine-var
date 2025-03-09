@@ -9,10 +9,10 @@ import PlaygroundTemp from "@/app/examples/playground-temp";
 export default function page() {
   
   return <main>
-    <EasyCounter/>
+    {/*<EasyCounter/>*/}
     {/*<Playground/>*/}
     {/*<EasyState/>*/}
-    {/*<PlaygroundTemp/>*/}
+    <PlaygroundTemp/>
   </main>
 }
 

@@ -16,15 +16,10 @@ const defaultValue = {
   map: map(),
 }
 
-const state = rhineProxy(defaultValue, 'room-5', {overwrite: false})
-
-console.log(state.obj)
-console.log(state.map)
+const state = rhineProxy(defaultValue, 'room-5', {overwrite: true})
 
 state.afterSynced(() => {
-  console.log(state.obj)
-  console.log(state.map)
-  console.log('Synced:', state.json())
+  console.log(state.json())
 })
 
 export default function PlaygroundTemp() {

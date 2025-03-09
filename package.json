@@ -1,6 +1,6 @@
 {
   "name": "rhine-var",
-  "version": "0.9.23",
+  "version": "0.10.1",
   "description": "Variables that support multi-user collaboration and persistence, making collaboration and variable operations as simple as possible, with strict and well-defined type hints.",
   "exports": {
     ".": "./dist/index.js",
@@ -9,10 +9,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc --watch",
-    "playground": "npm run dev --prefix playground/next-app",
+    "playground": "npm run dev --prefix playground/next",
     "prepare": "ts-patch install -s",
-    "install-next": "npm install --prefix playground/next-app",
-    "link-next": "npm link && npm link rhine-var --prefix playground/next-app",
+    "install-next": "npm install --prefix playground/next",
+    "link-next": "npm link && npm link rhine-var --prefix playground/next",
     "test": "echo All tests passed.",
     "build": "tsc",
     "commit": "node scripts/commit.js"

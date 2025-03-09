@@ -135,11 +135,11 @@ export function jsonToNative(data: any): Native {
     return map
   }
   if (isObject(data)) {
-    let map = new YObject<any>()
+    let map = new YMap<any>()
     Object.entries(data).forEach(([key, value]) => {
       map.set(key, jsonToNative(value))
     })
-    map.set('class', 'RhineVarObject')
+    map.set('_class', 'RhineVarObject')
     return map
   }
   if (isArray(data)) {

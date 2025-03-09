@@ -23,7 +23,7 @@ export function createRhineVar<T extends object = any>(target: Native, parent: R
   if (target instanceof YObject) {
     return new RhineVarObject<T>(target, parent)
   } else if (target instanceof YMap) {
-    if (target.get('class') === 'RhineVarObject') {
+    if (target.get('_class') === 'RhineVarObject') {
       return new RhineVarObject<T>(target, parent)
     }
     return new RhineVarMap<T>(target, parent)

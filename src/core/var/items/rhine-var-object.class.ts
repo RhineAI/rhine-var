@@ -4,7 +4,7 @@ import {InputItem, OutputItem, StoredRhineVar} from "@/core/var/rhine-var.type";
 
 export default class RhineVarObject<T extends object = any> extends RhineVarBase<T> implements Iterable<[keyof T, OutputItem<T[keyof T]>]> {
 
-  type: NativeType.Object = NativeType.Object;
+  _type: NativeType.Object = NativeType.Object;
 
   set(key: keyof T, value: InputItem<T[keyof T]>): void {
   }

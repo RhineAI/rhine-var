@@ -19,16 +19,16 @@ export default abstract class RhineVarBase<T extends object = any> {
   constructor(
     public native: Native,
     public parent: RhineVarBase | null = null,
-    public origin: RhineVarBase<T> = this as any
+    public _origin: RhineVarBase<T> = this as any
   ) {
     this.observe()
   }
 
-  private options: ProxyOptions = {}
-  private connector: Connector | null = null
-  private undoManager: UndoManager | null = null
-  private awareness: Awareness | null = null
-  private clientId: number = -1
+  private _options: ProxyOptions = {}
+  private _connector: Connector | null = null
+  private _undoManager: UndoManager | null = null
+  private _awareness: Awareness | null = null
+  private _clientId: number = -1
 
   isRoot(): boolean {
     return Boolean(!this.parent)
@@ -43,11 +43,11 @@ export default abstract class RhineVarBase<T extends object = any> {
   }
 
   getOptions(): ProxyOptions {
-    return this.root().options
+    return this.root()._options
   }
 
   getConnector(): Connector | null {
-    return this.root().connector
+    return this.root()._connector
   }
 
   getUndoManager(): UndoManager | null {
@@ -55,7 +55,7 @@ export default abstract class RhineVarBase<T extends object = any> {
       error('You need to enable awareness to use undoManager')
       return null
     }
-    return this.root().undoManager
+    return this.root()._undoManager
   }
 
   getAwareness(): Awareness | null {
@@ -63,7 +63,7 @@ export default abstract class RhineVarBase<T extends object = any> {
       error('You need to enable awareness to use awareness')
       return null
     }
-    return this.root().awareness
+    return this.root()._awareness
   }
 
   getClientId(): number {
@@ -71,10 +71,10 @@ export default abstract class RhineVarBase<T extends object = any> {
       error('You need to enable awareness to use clientId')
       return -1
     }
-    return this.root().clientId
+    return this.root()._clientId
   }
 
-  initialize(native: Native) {
+  private _initialize(native: Native) {
     // initialize function will call after every synced
     if (RhineVarConfig.ENABLE_ERROR) {
       log('Synced initialize:', this.json(), native.toJSON())
@@ -87,7 +87,7 @@ export default abstract class RhineVarBase<T extends object = any> {
         if (nativeHas(native, key)) {
           recursiveKeys.push(key)
         } else {
-          Reflect.deleteProperty(this.origin, key)
+          Reflect.deleteProperty(this._origin, key)
         }
       })
     }
@@ -95,20 +95,20 @@ export default abstract class RhineVarBase<T extends object = any> {
     this.native = native
 
     if (this.isRoot()) {
-      if (this.options.undoManager === undefined || this.options.undoManager) {
+      if (this._options.undoManager === undefined || this._options.undoManager) {
         if (!native) {
           error('Base map is not available for undoManager')
         } else {
-          this.undoManager = new UndoManager(native, isObject(this.options.undoManager) ? this.options.undoManager as UndoManagerOptions : undefined)
+          this._undoManager = new UndoManager(native, isObject(this._options.undoManager) ? this._options.undoManager as UndoManagerOptions : undefined)
         }
       }
-      if (this.options.awareness === undefined || this.options.awareness) {
-        const doc = this.connector?.yDoc
+      if (this._options.awareness === undefined || this._options.awareness) {
+        const doc = this._connector?.yDoc
         if (!doc) {
           error('YDoc is not available for awareness')
         } else {
-          this.awareness = new Awareness(doc)
-          this.clientId = this.awareness.clientID
+          this._awareness = new Awareness(doc)
+          this._clientId = this._awareness.clientID
         }
       }
     }
@@ -119,16 +119,16 @@ export default abstract class RhineVarBase<T extends object = any> {
         if (recursiveKeys.includes(key)) {
           const child = Reflect.get(this, key)
           if (child instanceof RhineVarBase) {
-            child.initialize(value)
+            child._initialize(value)
           } else {
-            Reflect.set(this.origin, key, value)
+            Reflect.set(this._origin, key, value)
           }
           return
         }
         if (isNative(value)) {
-          Reflect.set(this.origin, key, rhineProxyGeneral(value, this as any))
+          Reflect.set(this._origin, key, rhineProxyGeneral(value, this as any))
         } else {
-          Reflect.set(this.origin, key, value)
+          Reflect.set(this._origin, key, value)
         }
       })
     }
@@ -136,7 +136,7 @@ export default abstract class RhineVarBase<T extends object = any> {
 
 
   afterSynced(callback: () => void) {
-    const connector = this.root()?.connector
+    const connector = this.root()?._connector
     if (connector) {
       connector.afterSynced(callback)
     }
@@ -150,11 +150,38 @@ export default abstract class RhineVarBase<T extends object = any> {
 
 
   json(): T {
-    return this.native.toJSON() as T
+    return this._removeBuiltInProperty(this.native.toJSON())
+  }
+
+  private _removeBuiltInProperty(obj: any): any {
+    if (obj === null || typeof obj !== 'object') {
+      return obj
+    }
+    if (obj instanceof Date || obj instanceof RegExp) {
+      return obj
+    }
+
+    const builtInProperties = ['_type', '_class']
+
+    if (Array.isArray(obj)) {
+      return obj.map(item => this._removeBuiltInProperty(item))
+    }
+
+    if (typeof obj === 'object') {
+      const result: any = {}
+      for (const key in obj) {
+        if (builtInProperties.includes(key)) continue;
+        if (obj.hasOwnProperty(key)) {
+          result[key] = this._removeBuiltInProperty(obj[key])
+        }
+      }
+      return result
+    }
+    return obj
   }
 
   frozenJson(): T {
-    const origin = this.origin as any
+    const origin = this._origin as any
     if (this.native instanceof YMap) {
       const result: { [key: string | number]: any} = {}
       for (let key in origin) {
@@ -304,12 +331,12 @@ export default abstract class RhineVarBase<T extends object = any> {
           if (type === ChangeType.Add || type === ChangeType.Update) {
             value = target.get(key)
             if (isNative(value)) {
-              Reflect.set(this.origin, key, rhineProxyGeneral(value, this as any))
+              Reflect.set(this._origin, key, rhineProxyGeneral(value, this as any))
             } else {
-              Reflect.set(this.origin, key, value)
+              Reflect.set(this._origin, key, value)
             }
           } else if (type === ChangeType.Delete) {
-            Reflect.deleteProperty(this.origin, key)
+            Reflect.deleteProperty(this._origin, key)
           }
 
           const newValue = key in this ? Reflect.get(this, key) : value
@@ -331,11 +358,11 @@ export default abstract class RhineVarBase<T extends object = any> {
                 oldValue = oldValue.frozenJson()
               }
 
-              Reflect.deleteProperty(this.origin, i)
+              Reflect.deleteProperty(this._origin, i)
               for (let k = i + 1; k < target.length + deltaItem.delete; k++) {
                 const value = Reflect.get(this, k)
-                Reflect.set(this.origin, k - 1, value)
-                Reflect.deleteProperty(this.origin, k)
+                Reflect.set(this._origin, k - 1, value)
+                Reflect.deleteProperty(this._origin, k)
               }
 
               log('Proxy.event: Array delete', i + ':', oldValue, '->', undefined)
@@ -347,12 +374,12 @@ export default abstract class RhineVarBase<T extends object = any> {
             deltaItem.insert.forEach((value) => {
               for (let k = target.length - 1; k >= i; k--) {
                 const existingValue = Reflect.get(this, k)
-                Reflect.set(this.origin, k + 1, existingValue)
+                Reflect.set(this._origin, k + 1, existingValue)
               }
               if (isObjectOrArray(value)) {
-                Reflect.set(this.origin, i, rhineProxyGeneral(value, this as any))
+                Reflect.set(this._origin, i, rhineProxyGeneral(value, this as any))
               } else {
-                Reflect.set(this.origin, i, value)
+                Reflect.set(this._origin, i, value)
               }
 
               const newValue = i in this ? Reflect.get(this, i) : target.get(i)
@@ -378,7 +405,7 @@ export default abstract class RhineVarBase<T extends object = any> {
         const isUpdate = hasDelete && hasInsert
         const oldValue = Reflect.get(this, 'value')
         const newValue = this.native.toString()
-        Reflect.set(this.origin, 'value', newValue)
+        Reflect.set(this._origin, 'value', newValue)
 
         let i = 0
         if (isUpdate) {
@@ -429,22 +456,25 @@ export default abstract class RhineVarBase<T extends object = any> {
 
 
 export const RHINE_VAR_PREDEFINED_PROPERTIES = new Set<string | symbol>([
-  'origin',
+  '_origin',
+  '_class',
+  '_type',
+
+  '_initialize',
+
   'native',
-  'nativeType',
-  'initialize',
   'json',
   'jsonString',
   'parent',
   'isRoot',
   'root',
-  'class',
 
-  'options',
-  'connector',
-  'undoManager',
-  'awareness',
-  'clientId',
+  '_options',
+  '_connector',
+  '_undoManager',
+  '_awareness',
+  '_clientId',
+
   'getOptions',
   'getConnector',
   'getUndoManager',

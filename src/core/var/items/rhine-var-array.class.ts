@@ -5,7 +5,7 @@ import {InputItem} from "@/core/var/rhine-var.type";
 
 export default class RhineVarArray<T = any, N = any> extends RhineVarBase<T[]> implements Iterable<T> {
 
-  type: NativeType.Array = NativeType.Array;
+  _type: NativeType.Array = NativeType.Array;
 
   [key: number]: T
 
