@@ -1,7 +1,7 @@
 import { YMap, YDoc } from "@/index"
 import {ConnectorStatus} from "@/core/connector/connector-status.enum";
 import {Native} from "@/core/native/native.type";
-import {SyncedCallback} from "@/core/event/callback";
+import {SyncedSubscriber} from "@/core/subscriber/subscriber";
 
 export default abstract class Connector {
   
@@ -16,12 +16,12 @@ export default abstract class Connector {
   status: ConnectorStatus = ConnectorStatus.DISCONNECTED
   
   
-  protected syncedSubscribers: SyncedCallback[] = []
-  subscribeSynced(callback: SyncedCallback) {
+  protected syncedSubscribers: SyncedSubscriber[] = []
+  subscribeSynced(callback: SyncedSubscriber) {
     this.syncedSubscribers.push(callback)
     return () => this.unsubscribeSynced(callback)
   }
-  unsubscribeSynced(callback: SyncedCallback) {
+  unsubscribeSynced(callback: SyncedSubscriber) {
     this.syncedSubscribers = this.syncedSubscribers.filter(subscriber => subscriber !== callback)
   }
   unsubscribeAllSynced() {

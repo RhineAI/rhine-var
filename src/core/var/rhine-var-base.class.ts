@@ -5,8 +5,8 @@ import {rhineProxyGeneral} from "@/core/proxy/rhine-proxy";
 import {error, log} from "@/utils/logger";
 import {isObject, isObjectOrArray} from "@/core/utils/data.utils";
 import {Native, RvKey, RvPath} from "@/core/native/native.type";
-import {ChangeType} from "@/core/event/change-type.enum";
-import {Callback, DeepCallback, SyncedCallback} from "@/core/event/callback";
+import {EventType} from "@/core/subscriber/event-type.enum";
+import {Subscriber, DeepSubscriber, SyncedSubscriber, KeySubscriber} from "@/core/subscriber/subscriber";
 import Connector from "@/core/connector/connector.abstract";
 import {getKeyFromParent, isNative, nativeHas} from "@/core/utils/native.utils";
 import ProxyOptions from "@/core/proxy/proxy-options.interface";
@@ -224,12 +224,12 @@ export default abstract class RhineVarBase<T extends object = any> {
     return JSON.stringify(this.json(), null, indent)
   }
 
-  private syncedSubscribers: SyncedCallback[] = []
-  subscribeSynced(callback: SyncedCallback) {
+  private syncedSubscribers: SyncedSubscriber[] = []
+  subscribeSynced(callback: SyncedSubscriber) {
     this.syncedSubscribers.push(callback)
     return () => this.unsubscribeSynced(callback)
   }
-  unsubscribeSynced(callback: SyncedCallback) {
+  unsubscribeSynced(callback: SyncedSubscriber) {
     this.syncedSubscribers = this.syncedSubscribers.filter(subscriber => subscriber !== callback)
   }
   unsubscribeAllSynced() {
@@ -241,68 +241,68 @@ export default abstract class RhineVarBase<T extends object = any> {
   }
 
 
-  private subscribers: Callback<T>[] = []
-  subscribe(callback: Callback<T>): () => void {
-    this.subscribers.push(callback)
-    return () => this.unsubscribe(callback)
+  private subscribers: Subscriber<T>[] = []
+  subscribe(subscriber: Subscriber<T>): () => void {
+    this.subscribers.push(subscriber)
+    return () => this.unsubscribe(subscriber)
   }
-  unsubscribe(callback: Callback<T>) {
-    this.subscribers = this.subscribers.filter(subscriber => subscriber !== callback)
+  unsubscribe(subscriber: Subscriber<T>) {
+    this.subscribers = this.subscribers.filter(s => s !== subscriber)
   }
   unsubscribeAll() {
     this.subscribers = []
   }
 
-  private keySubscribers: Map<keyof T, Callback<T>[]> = new Map()
-  subscribeKey(key: keyof T, callback: Callback<T>): () => void {
+  private keySubscribers: Map<keyof T, KeySubscriber<T>[]> = new Map()
+  subscribeKey(key: keyof T, subscriber: KeySubscriber<T>): () => void {
     if (!this.keySubscribers.has(key)) {
       this.keySubscribers.set(key, [])
     }
-    this.keySubscribers.get(key)!.push(callback)
-    return () => this.unsubscribeKey(callback)
+    this.keySubscribers.get(key)!.push(subscriber)
+    return () => this.unsubscribeKey(subscriber)
   }
-  unsubscribeKey(callback: Callback<T>) {
+  unsubscribeKey(subscriber: KeySubscriber<T>) {
     this.keySubscribers.forEach((subscribers, key) => {
-      this.keySubscribers.set(key, subscribers.filter(subscriber => subscriber !== callback))
+      this.keySubscribers.set(key, subscribers.filter(s => s !== subscriber))
     })
   }
   unsubscribeAllKey() {
     this.keySubscribers = new Map()
   }
 
-  private emit(key: keyof T, value: T[keyof T], oldValue: T[keyof T], type: ChangeType, nativeEvent: YMapEvent<any> | YArrayEvent<any> | YTextEvent, nativeTransaction: Transaction) {
-    this.subscribers.forEach(subscriber => subscriber(key, value, oldValue, type, nativeEvent, nativeTransaction))
+  private emit(type: EventType, key: keyof T, value: T[keyof T], oldValue: T[keyof T], nativeEvent: YMapEvent<any> | YArrayEvent<any> | YTextEvent, nativeTransaction: Transaction) {
+    this.subscribers.forEach(subscriber => subscriber(type, key, value, oldValue, nativeEvent, nativeTransaction))
     if (this.keySubscribers.has(key)) {
-      this.keySubscribers.get(key)!.forEach(subscriber => subscriber(key, value, oldValue, type, nativeEvent, nativeTransaction))
+      this.keySubscribers.get(key)!.forEach(subscriber => subscriber(type, value, oldValue, nativeEvent, nativeTransaction))
     }
   }
 
 
-  private deepSubscribers: DeepCallback<T>[] = []
-  subscribeDeep(callback: DeepCallback<T>): () => void {
-    this.deepSubscribers.push(callback)
-    return () => this.unsubscribeDeep(callback)
+  private deepSubscribers: DeepSubscriber<T>[] = []
+  subscribeDeep(subscriber: DeepSubscriber<T>): () => void {
+    this.deepSubscribers.push(subscriber)
+    return () => this.unsubscribeDeep(subscriber)
   }
-  unsubscribeDeep(callback: DeepCallback<T>) {
-    this.deepSubscribers = this.deepSubscribers.filter(subscriber => subscriber !== callback)
+  unsubscribeDeep(subscriber: DeepSubscriber<T>) {
+    this.deepSubscribers = this.deepSubscribers.filter(s => s !== subscriber)
   }
   unsubscribeAllDeep() {
     this.deepSubscribers = []
   }
 
-  emitDeep(path: RvPath, value: any, oldValue: any, type: ChangeType, nativeEvent: YMapEvent<any> | YArrayEvent<any> | YTextEvent, nativeTransaction: Transaction) {
-    this.deepSubscribers.forEach(subscriber => subscriber(path, value, oldValue, type, nativeEvent, nativeTransaction))
+  emitDeep(type: EventType, path: RvPath, value: any, oldValue: any, nativeEvent: YMapEvent<any> | YArrayEvent<any> | YTextEvent, nativeTransaction: Transaction) {
+    this.deepSubscribers.forEach(subscriber => subscriber(type, path, value, oldValue, nativeEvent, nativeTransaction))
 
     if (this.parent) {
       const key = getKeyFromParent(this.native)
       if (key !== undefined) {
-        this.parent.emitDeep([key, ...path], value, oldValue, type, nativeEvent, nativeTransaction)
+        this.parent.emitDeep(type, [key, ...path], value, oldValue, nativeEvent, nativeTransaction)
       }
     }
   }
 
   private observer = (event: YMapEvent<any> | YArrayEvent<any> | YTextEvent, transaction: Transaction) => {}
-  private syncedObserver: SyncedCallback = (synced: boolean) => {}
+  private syncedObserver: SyncedSubscriber = (synced: boolean) => {}
 
   observe() {
     const connector = this.getConnector()
@@ -318,7 +318,7 @@ export default abstract class RhineVarBase<T extends object = any> {
     if (target instanceof YMap) {
       this.observer = (event, transaction) => {
         event.changes.keys.forEach(({action, oldValue}, key) => {
-          const type = action === 'add' ? ChangeType.Add : (action === 'delete' ? ChangeType.Delete : ChangeType.Update)
+          const type = action === 'add' ? EventType.ADD : (action === 'delete' ? EventType.DELETE : EventType.UPDATE)
 
           if (isObjectOrArray(oldValue)) {
             oldValue = Reflect.get(this, key)
@@ -328,21 +328,21 @@ export default abstract class RhineVarBase<T extends object = any> {
           }
 
           let value = undefined
-          if (type === ChangeType.Add || type === ChangeType.Update) {
+          if (type === EventType.ADD || type === EventType.UPDATE) {
             value = target.get(key)
             if (isNative(value)) {
               Reflect.set(this._origin, key, rhineProxyGeneral(value, this as any))
             } else {
               Reflect.set(this._origin, key, value)
             }
-          } else if (type === ChangeType.Delete) {
+          } else if (type === EventType.DELETE) {
             Reflect.deleteProperty(this._origin, key)
           }
 
           const newValue = key in this ? Reflect.get(this, key) : value
           log('Proxy.event: Map', action, key + ':', oldValue, '->', newValue)
-          this.emit(key as keyof T, newValue, oldValue, type, event, transaction)
-          this.emitDeep([key], newValue, oldValue, type, event, transaction)
+          this.emit(type, key as keyof T, newValue, oldValue, event, transaction)
+          this.emitDeep(type, [key], newValue, oldValue, event, transaction)
         })
       }
     } else if (target instanceof YArray){
@@ -366,8 +366,8 @@ export default abstract class RhineVarBase<T extends object = any> {
               }
 
               log('Proxy.event: Array delete', i + ':', oldValue, '->', undefined)
-              this.emit(i as keyof T, undefined as any, oldValue as any, ChangeType.Delete, event, transaction)
-              this.emitDeep([i], undefined, oldValue, ChangeType.Delete, event, transaction)
+              this.emit(EventType.DELETE, i as keyof T, undefined as any, oldValue as any, event, transaction)
+              this.emitDeep(EventType.DELETE, [i], undefined, oldValue, event, transaction)
               i++
             }
           } else if (deltaItem.insert !== undefined && Array.isArray(deltaItem.insert)) {
@@ -384,8 +384,8 @@ export default abstract class RhineVarBase<T extends object = any> {
 
               const newValue = i in this ? Reflect.get(this, i) : target.get(i)
               log('Proxy.event: Array add', i, ':', undefined, '->', newValue)
-              this.emit(i as keyof T, newValue as any, undefined as any, ChangeType.Add, event, transaction)
-              this.emitDeep([i], newValue, undefined, ChangeType.Add, event, transaction)
+              this.emit(EventType.ADD, i as keyof T, newValue as any, undefined as any, event, transaction)
+              this.emitDeep(EventType.ADD, [i], newValue, undefined, event, transaction)
               i++
             })
           }
@@ -410,8 +410,8 @@ export default abstract class RhineVarBase<T extends object = any> {
         let i = 0
         if (isUpdate) {
           log('Proxy.event: Text update', ':', oldValue, '->', newValue)
-          this.emit(i as keyof T, newValue as any, oldValue as any, ChangeType.Update, event, transaction)
-          this.emitDeep([i], newValue, oldValue, ChangeType.Update, event, transaction)
+          this.emit(EventType.UPDATE, i as keyof T, newValue as any, oldValue as any, event, transaction)
+          this.emitDeep(EventType.UPDATE, [i], newValue, oldValue, event, transaction)
         } else {
           event.delta.forEach(deltaItem => {
             if (deltaItem.retain !== undefined) {
@@ -420,13 +420,13 @@ export default abstract class RhineVarBase<T extends object = any> {
             }
             if (deltaItem.delete !== undefined) {
               log('Proxy.event: Text delete', i, ':', oldValue, '->', newValue)
-              this.emit(i as keyof T, newValue as any, oldValue as any, ChangeType.Delete, event, transaction)
-              this.emitDeep([i], newValue, oldValue, ChangeType.Delete, event, transaction)
+              this.emit(EventType.DELETE, i as keyof T, newValue as any, oldValue as any, event, transaction)
+              this.emitDeep(EventType.DELETE, [i], newValue, oldValue, event, transaction)
               i += deltaItem.delete
             } else if (deltaItem.insert !== undefined) {
               log('Proxy.event: Text add', i, ':', oldValue, '->', newValue)
-              this.emit(i as keyof T, newValue as any, oldValue as any, ChangeType.Add, event, transaction)
-              this.emitDeep([i], newValue, oldValue, ChangeType.Add, event, transaction)
+              this.emit(EventType.ADD, i as keyof T, newValue as any, oldValue as any, event, transaction)
+              this.emitDeep(EventType.ADD, [i], newValue, oldValue, event, transaction)
               i += newValue.length
             }
           })
@@ -434,8 +434,8 @@ export default abstract class RhineVarBase<T extends object = any> {
       }
     } else {
       this.observer = (event, transaction) => {
-        this.emit(undefined as any, undefined as any, undefined as any, ChangeType.Update, event, transaction)
-        this.emitDeep(undefined as any, undefined, undefined, ChangeType.Update, event, transaction)
+        this.emit(EventType.UPDATE, undefined as any, undefined as any, undefined as any, event, transaction)
+        this.emitDeep(EventType.UPDATE, undefined as any, undefined, undefined, event, transaction)
       }
     }
 
