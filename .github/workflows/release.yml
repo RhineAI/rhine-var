@@ -131,7 +131,7 @@ jobs:
           npm config set @RhineAI-Lab:registry=https://npm.pkg.github.com
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
 
-      - name: Publish to NPM
+      - name: Publish to Github
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
