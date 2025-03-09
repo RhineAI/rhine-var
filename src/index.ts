@@ -25,7 +25,7 @@ import {
 } from "yjs";
 import ProxyOptions from "./core/proxy/proxy-options.interface";
 import { UndoManagerOptions } from "yjs/dist/src/utils/UndoManager";
-import { EventType } from "./core/event/event-type.enum";
+import { EventType } from "./core/subscriber/event-type.enum";
 
 export type {
   StoredRhineVar,
