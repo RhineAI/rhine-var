@@ -38,11 +38,12 @@ export default function loadReact(): ReactType {
   }
 
   // 3. React Native 特殊处理
-  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
-    try {
-      return require('react-native').require('react')
-    } catch {}
-  }
+  // TODO: React Native is not supported now
+  // if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+  //   try {
+  //     return require('react-native').require('react')
+  //   } catch {}
+  // }
 
   return null
 }
