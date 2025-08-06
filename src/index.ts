@@ -26,6 +26,9 @@ import {
 import ProxyOptions from "./core/proxy/proxy-options.interface";
 import { UndoManagerOptions } from "yjs/dist/src/utils/UndoManager";
 import { EventType } from "./core/subscriber/event-type.enum";
+import { HocuspocusProvider } from "@hocuspocus/provider";
+import { WebsocketProvider } from "y-websocket";
+import { Awareness } from "y-protocols/awareness";
 
 export type {
   StoredRhineVar,
@@ -39,6 +42,9 @@ export type {
   RvKey,
   ProxyOptions,
   UndoManagerOptions,
+  HocuspocusProvider,
+  WebsocketProvider,
+  Awareness,
 }
 
 export {
