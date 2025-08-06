@@ -42,9 +42,6 @@ export type {
   RvKey,
   ProxyOptions,
   UndoManagerOptions,
-  HocuspocusProvider,
-  WebsocketProvider,
-  Awareness,
 }
 
 export {
@@ -74,4 +71,7 @@ export {
   YXmlElement,
   YXmlText,
   EventType,
+  HocuspocusProvider,
+  WebsocketProvider,
+  Awareness,
 }
