@@ -9,11 +9,11 @@ export default class SupportText extends SupportBase {
 
   static convertProperty<T>(key: string | symbol, object: RhineVarAny): any {
     console.log('SupportText.convertProperty', key, object)
-    if (!(object.native instanceof YText) || !(object instanceof RhineVarText)) {
-      console.error('Unsupported convertProperty:', object, object.native)
+    if (!(object.getNative() instanceof YText) || !(object instanceof RhineVarText)) {
+      console.error('Unsupported convertProperty:', object, object.getNative())
       return
     }
-    const native = object.native as any as YText
+    const native = object.getNative() as any as YText
 
     switch (key) {
       case 'insert':

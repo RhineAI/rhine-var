@@ -12,12 +12,12 @@ export default class SupportMap extends SupportBase {
   static TARGET_TAG = 'RhineVarMap'
 
   static convertProperty<T>(key: string | symbol, object: RhineVarAny): any {
-    if (!(object.native instanceof YMap) || !(object instanceof RhineVarMap || object instanceof RhineVarObject)) {
-      console.error('Unsupported convertProperty:', object, object.native)
+    if (!(object.getNative() instanceof YMap) || !(object instanceof RhineVarMap || object instanceof RhineVarObject)) {
+      console.error('Unsupported convertProperty:', object, object.getNative())
       return
     }
     const map = object
-    const native = object.native as YMap<T>
+    const native = object.getNative() as YMap<T>
 
     const get = (key: string): T => {
       if (key in map) {

@@ -3,7 +3,6 @@ import {Transaction, YArrayEvent, YMapEvent, YTextEvent} from "yjs";
 import {RvPath} from "@/core/native/native.type";
 import {StoredRhineVar} from "@/core/var/rhine-var.type";
 
-
 export type Subscriber<T> = (
   type: EventType,
   key: keyof T,

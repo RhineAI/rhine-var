@@ -17,9 +17,9 @@ import {UndoManagerOptions} from "yjs/dist/src/utils/UndoManager";
 export default abstract class RhineVarBase<T extends object = any> {
 
   constructor(
-    public native: Native,
-    public parent: RhineVarBase | null = null,
-    public _origin: RhineVarBase<T> = this as any
+    private _native: Native,
+    private _parent: RhineVarBase | null = null,
+    private _origin: RhineVarBase<T> = this as any
   ) {
     this.observe()
   }
@@ -31,23 +31,31 @@ export default abstract class RhineVarBase<T extends object = any> {
   private _clientId: number = -1
 
   isRoot(): boolean {
-    return Boolean(!this.parent)
+    return Boolean(!this._parent)
   }
 
-  root(): RhineVarBase {
+  getParent(): RhineVarBase | null {
+    return this._parent
+  }
+
+  getNative(): Native {
+    return this._native
+  }
+
+  getRoot(): RhineVarBase {
     if (this.isRoot()) {
       return this as any
     } else {
-      return this.parent!.root()
+      return this._parent!.getRoot()
     }
   }
 
   getOptions(): ProxyOptions {
-    return this.root()._options
+    return this.getRoot()._options
   }
 
   getConnector(): Connector | null {
-    return this.root()._connector
+    return this.getRoot()._connector
   }
 
   getUndoManager(): UndoManager | null {
@@ -55,7 +63,7 @@ export default abstract class RhineVarBase<T extends object = any> {
       error('You need to enable awareness to use undoManager')
       return null
     }
-    return this.root()._undoManager
+    return this.getRoot()._undoManager
   }
 
   getAwareness(): Awareness | null {
@@ -63,7 +71,7 @@ export default abstract class RhineVarBase<T extends object = any> {
       error('You need to enable awareness to use awareness')
       return null
     }
-    return this.root()._awareness
+    return this.getRoot()._awareness
   }
 
   getClientId(): number {
@@ -71,7 +79,7 @@ export default abstract class RhineVarBase<T extends object = any> {
       error('You need to enable awareness to use clientId')
       return -1
     }
-    return this.root()._clientId
+    return this.getRoot()._clientId
   }
 
   private _initialize(native: Native) {
@@ -82,8 +90,8 @@ export default abstract class RhineVarBase<T extends object = any> {
 
     const recursiveKeys: RvKey[] = []
 
-    if (this.native instanceof YMap || this.native instanceof YArray) {
-      this.native.forEach((value: any, key: string | number) => {
+    if (this._native instanceof YMap || this._native instanceof YArray) {
+      this._native.forEach((value: any, key: string | number) => {
         if (nativeHas(native, key)) {
           recursiveKeys.push(key)
         } else {
@@ -92,7 +100,7 @@ export default abstract class RhineVarBase<T extends object = any> {
       })
     }
     this.unobserve()
-    this.native = native
+    this._native = native
 
     if (this.isRoot()) {
       if (this._options.undoManager === undefined || this._options.undoManager) {
@@ -114,8 +122,8 @@ export default abstract class RhineVarBase<T extends object = any> {
     }
 
     this.observe()
-    if (this.native instanceof YMap || this.native instanceof YArray) {
-      this.native.forEach((value: Native, key: string | number) => {
+    if (this._native instanceof YMap || this._native instanceof YArray) {
+      this._native.forEach((value: Native, key: string | number) => {
         if (recursiveKeys.includes(key)) {
           const child = Reflect.get(this, key)
           if (child instanceof RhineVarBase) {
@@ -136,7 +144,7 @@ export default abstract class RhineVarBase<T extends object = any> {
 
 
   afterSynced(callback: () => void) {
-    const connector = this.root()?._connector
+    const connector = this.getRoot()?._connector
     if (connector) {
       connector.afterSynced(callback)
     }
@@ -150,7 +158,7 @@ export default abstract class RhineVarBase<T extends object = any> {
 
 
   json(): T {
-    return this._removeBuiltInProperty(this.native.toJSON())
+    return this._removeBuiltInProperty(this._native.toJSON())
   }
 
   private _removeBuiltInProperty(obj: any): any {
@@ -182,7 +190,7 @@ export default abstract class RhineVarBase<T extends object = any> {
 
   frozenJson(): T {
     const origin = this._origin as any
-    if (this.native instanceof YMap) {
+    if (this._native instanceof YMap) {
       const result: { [key: string | number]: any} = {}
       for (let key in origin) {
         if (
@@ -202,7 +210,7 @@ export default abstract class RhineVarBase<T extends object = any> {
         }
       }
       return result as T
-    } else if (this.native instanceof YArray) {
+    } else if (this._native instanceof YArray) {
       const result: any[] = []
       for (let i = 0;; i++) {
         if (i in origin) {
@@ -293,10 +301,10 @@ export default abstract class RhineVarBase<T extends object = any> {
   emitDeep(type: EventType, path: RvPath, value: any, oldValue: any, nativeEvent: YMapEvent<any> | YArrayEvent<any> | YTextEvent, nativeTransaction: Transaction) {
     this.deepSubscribers.forEach(subscriber => subscriber(type, path, value, oldValue, nativeEvent, nativeTransaction))
 
-    if (this.parent) {
-      const key = getKeyFromParent(this.native)
+    if (this._parent) {
+      const key = getKeyFromParent(this._native)
       if (key !== undefined) {
-        this.parent.emitDeep(type, [key, ...path], value, oldValue, nativeEvent, nativeTransaction)
+        this._parent.emitDeep(type, [key, ...path], value, oldValue, nativeEvent, nativeTransaction)
       }
     }
   }
@@ -314,7 +322,7 @@ export default abstract class RhineVarBase<T extends object = any> {
       this.emitSynced(connector.synced)
     }
 
-    const target = this.native
+    const target = this._native
     if (target instanceof YMap) {
       this.observer = (event, transaction) => {
         event.changes.keys.forEach(({action, oldValue}, key) => {
@@ -404,7 +412,7 @@ export default abstract class RhineVarBase<T extends object = any> {
         })
         const isUpdate = hasDelete && hasInsert
         const oldValue = Reflect.get(this, 'value')
-        const newValue = this.native.toString()
+        const newValue = this._native.toString()
         Reflect.set(this._origin, 'value', newValue)
 
         let i = 0
@@ -446,7 +454,7 @@ export default abstract class RhineVarBase<T extends object = any> {
 
   unobserve() {
     if (this.observer) {
-      this.native.unobserve(this.observer as any)
+      this._native.unobserve(this.observer as any)
     }
     if (this.syncedObserver) {
       this.getConnector()?.unsubscribeSynced(this.syncedObserver)

@@ -11,12 +11,12 @@ export default class SupportArray extends SupportBase {
   static TARGET_TAG = 'RhineVarArray'
 
   static convertProperty<T>(key: string | symbol, object: RhineVarAny): any {
-    if (!(object.native instanceof YArray) || !(object instanceof RhineVarArray)) {
-      console.error('Unsupported convertProperty:', object, object.native)
+    if (!(object.getNative() instanceof YArray) || !(object instanceof RhineVarArray)) {
+      console.error('Unsupported convertProperty:', object, object.getNative())
       return
     }
     const array = object
-    const native = object.native as YArray<any>
+    const native = object.getNative() as YArray<any>
 
     const get = (i: number): T => {
       if (i in array) {

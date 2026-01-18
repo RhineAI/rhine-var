@@ -20,7 +20,7 @@ export function nativeSet(target: Native, key: string | symbol, value: any): boo
     return false
   }
   if (value instanceof RhineVarBase) {
-    value = value.native
+    value = value.getNative()
   }
   
   try {

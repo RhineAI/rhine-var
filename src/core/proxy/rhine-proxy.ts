@@ -43,10 +43,10 @@ export function rhineProxy<T extends object>(
   // Bind connector
   connector.subscribeSynced((synced: boolean) => {
     if (options.overwrite) {
-      connector.setState(object.native.clone())
+      connector.setState(object.getNative().clone())
     }
     if (!connector.hasState()) {
-      connector.setState(object.native.clone())
+      connector.setState(object.getNative().clone())
     }
     (object as any)._initialize(connector.getState())
   })
@@ -63,10 +63,11 @@ export function rhineProxyGeneral<T extends object>(
 
   const object: RhineVarBase = createRhineVar(target, parent) as any
 
-  if (object.native instanceof YText) {
-    Reflect.set(object, 'value', object.native.toString())
-  } else if (object.native instanceof YMap || object.native instanceof YArray) {
-    object.native.forEach((value, keyString) => {
+  const native = object.getNative()
+  if (native instanceof YText) {
+    Reflect.set(object, 'value', native.toString())
+  } else if (native instanceof YMap || native instanceof YArray) {
+    native.forEach((value, keyString) => {
       let key = keyString as keyof T
       if (isNative(value)) {
         Reflect.set(object, key, rhineProxyGeneral<T>(value, object))
@@ -81,12 +82,13 @@ export function rhineProxyGeneral<T extends object>(
     if (p === Symbol.iterator) {
       return {
         value: function* () {
-          if (object.native instanceof YMap) {
-            for (const key of object.native.keys()) {
+          const native = object.getNative()
+          if (native instanceof YMap) {
+            for (const key of native.keys()) {
               yield Reflect.get(object, key)
             }
-          } else if (object.native instanceof YArray) {
-            for (let i = 0; i < object.native.length; i++) {
+          } else if (native instanceof YArray) {
+            for (let i = 0; i < native.length; i++) {
               yield Reflect.get(object, String(i))
             }
           }
@@ -119,15 +121,15 @@ export function rhineProxyGeneral<T extends object>(
       if (RHINE_VAR_PREDEFINED_PROPERTIES.has(p)) return Reflect.set(object, p, value, receiver)
       log('Proxy.handler.set:', p, 'to', value, '  ', object, receiver)
 
-      if (object.native instanceof YText && object instanceof RhineVarText && p === 'value') {
+      if (object.getNative() instanceof YText && object instanceof RhineVarText && p === 'value') {
         if (typeof value !== 'string') {
           error('Value for YText must be a string')
           return false
         }
-        const doc = object.native.doc
+        const doc = object.getNative().doc
         if (doc) {
           doc.transact(() => {
-            const native = object.native as YText
+            const native = object.getNative() as YText
             native.delete(0, native.length)
             native.insert(0, value)
           })
@@ -140,23 +142,23 @@ export function rhineProxyGeneral<T extends object>(
 
       value = ensureRhineVar(value, object)
 
-      return nativeSet(object.native, p, value)
+      return nativeSet(object.getNative(), p, value)
     },
 
     deleteProperty(proxy: RhineVarBase<T>, p: string | symbol): boolean {
       if (RHINE_VAR_PREDEFINED_PROPERTIES.has(p)) return false
       log('Proxy.handler.deleteProperty:', p)
 
-      return nativeDelete(object.native, p)
+      return nativeDelete(object.getNative(), p)
     },
 
     has(proxy: RhineVarBase<T>, p: string | symbol): boolean {
       if (RHINE_VAR_PREDEFINED_PROPERTIES.has(p)) return false
-      return nativeHas(object.native, p)
+      return nativeHas(object.getNative(), p)
     },
 
     ownKeys(proxy: RhineVarBase<T>): string[] {
-      return nativeOwnKeys(object.native)
+      return nativeOwnKeys(object.getNative())
     },
 
     getOwnPropertyDescriptor: proxyGetOwnPropertyDescriptor,

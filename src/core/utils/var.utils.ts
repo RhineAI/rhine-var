@@ -40,7 +40,7 @@ export function ensureNative<T extends object = any>(value: T | RhineVarBase<T> 
     return value as Native
   }
   if (isRhineVar(value)) {
-    return (value as RhineVarBase).native
+    return (value as RhineVarBase).getNative()
   }
   if (isObjectOrArray(value)) {
     return jsonToNative(value)
@@ -58,7 +58,7 @@ export function ensureNativeOrBasic<T = any>(value: T): Native | Basic {
     return value as Native
   }
   if (isRhineVar(value)) {
-    return (value as RhineVarBase).native
+    return (value as RhineVarBase).getNative()
   }
   if (isObjectOrArray(value)) {
     return jsonToNative(value)
