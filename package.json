@@ -9,10 +9,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc --watch",
-    "playground": "npm run dev --prefix playground/next",
+    "playground": "bun run dev --prefix playground/next",
     "prepare": "ts-patch install -s",
-    "install-next": "npm install --prefix playground/next",
-    "link-next": "npm link && npm link rhine-var --prefix playground/next",
+    "install-next": "bun install --prefix playground/next",
+    "link-next": "bun link && bun link rhine-var --prefix playground/next",
     "test": "echo All tests passed.",
     "build": "tsc",
     "commit": "node scripts/commit.js"
