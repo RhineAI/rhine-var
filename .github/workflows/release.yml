@@ -69,21 +69,34 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js Environment
+      - name: Setup Bun Environment
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 'latest'
+
+      - name: Cache Bun Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run Unit Tests
+        run: bun test
+
+      - name: Build Project
+        run: bun run build
+
+      - name: Setup Node.js for NPM
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           registry-url: https://registry.npmjs.org/
-          cache: "yarn"
-
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Run Unit Tests
-        run: yarn test
-
-      - name: Build Project
-        run: yarn build
 
       - name: Publish to NPM
         run: npm publish
@@ -103,20 +116,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js Environment
-        uses: actions/setup-node@v4
+      - name: Setup Bun Environment
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "20"
-          cache: "yarn"
+          bun-version: 'latest'
+
+      - name: Cache Bun Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
 
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Run Unit Tests
-        run: yarn test
+        run: bun test
 
       - name: Build Project
-        run: yarn build
+        run: bun run build
 
       - name: Add scope to package.json
         run: |
@@ -124,7 +145,7 @@ jobs:
           cp package.json package.json.bak
           jq '.name = "@RhineAI/\(.name)" | .repository.url = "git+https://github.com/RhineAI/rhine-var.git"' package.json > package.json.tmp
           mv package.json.tmp package.json
-          jq empty package.json   
+          jq empty package.json
 
       - name: Configure npm Registry
         run: |
