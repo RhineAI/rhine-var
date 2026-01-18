@@ -1,12 +1,18 @@
 {
   "name": "rhine-var",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "description": "Variables that support multi-user collaboration and persistence, making collaboration and variable operations as simple as possible, with strict and well-defined type hints.",
   "exports": {
     ".": "./dist/index.js",
     "./react": "./dist/react/index.js"
   },
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "README_zh.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "tsc --watch",
     "playground": "bun run dev --prefix playground/next",
