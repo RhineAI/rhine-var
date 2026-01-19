@@ -17,13 +17,13 @@ import Connector from '@/core/connector/connector.abstract'
 import { Native, RvKey, RvPath } from '@/core/native/native.type'
 import text from '@/core/proxy/items/text'
 import { rhineProxy, rhineProxyGeneral } from '@/core/proxy/rhine-proxy'
-import RhineVarBase from '@/core/var/rhine-var-base.class'
-import RhineVarMap from '@/core/var/items/rhine-var-map.class'
 import RhineVarArray from '@/core/var/items/rhine-var-array.class'
+import RhineVarMap from '@/core/var/items/rhine-var-map.class'
 import RhineVarText from '@/core/var/items/rhine-var-text.class'
-import RhineVarXmlText from '@/core/var/items/rhine-var-xml-text.class'
 import RhineVarXmlElement from '@/core/var/items/rhine-var-xml-element.class'
 import RhineVarXmlFragment from '@/core/var/items/rhine-var-xml-fragment.class'
+import RhineVarXmlText from '@/core/var/items/rhine-var-xml-text.class'
+import RhineVarBase from '@/core/var/rhine-var-base.class'
 import {
   RhineVar,
   RecursiveCrossRhineVar,
