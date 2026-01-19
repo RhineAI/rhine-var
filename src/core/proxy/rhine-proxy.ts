@@ -1,16 +1,16 @@
-import {YArray, YDoc, YMap, YText} from "@/index"
-import Connector from "@/core/connector/connector.abstract";
-import RhineVarBase, {RHINE_VAR_PREDEFINED_PROPERTIES} from "@/core/var/rhine-var-base.class";
-import {error, log} from "@/utils/logger";
-import {RhineVarAny, StoredRhineVar} from "@/core/var/rhine-var.type";
-import {Native} from "@/core/native/native.type";
-import {isNative, nativeDelete, nativeHas, nativeOwnKeys, nativeSet} from "@/core/utils/native.utils";
-import {createConnector} from "@/core/connector/create-connector";
-import {createRhineVar} from "@/core/proxy/create-rhine-var";
-import {ensureNative, ensureRhineVar} from "@/core/utils/var.utils";
-import SupportManager from "@/core/var/support/support-manager";
-import RhineVarText from "@/core/var/items/rhine-var-text.class";
-import ProxyOptions from "@/core/proxy/proxy-options.interface";
+import Connector from '@/core/connector/connector.abstract'
+import { createConnector } from '@/core/connector/create-connector'
+import { Native } from '@/core/native/native.type'
+import { createRhineVar } from '@/core/proxy/create-rhine-var'
+import ProxyOptions from '@/core/proxy/proxy-options.interface'
+import { isNative, nativeDelete, nativeHas, nativeOwnKeys, nativeSet } from '@/core/utils/native.utils'
+import { ensureNative, ensureRhineVar } from '@/core/utils/var.utils'
+import RhineVarText from '@/core/var/items/rhine-var-text.class'
+import RhineVarBase, { RHINE_VAR_PREDEFINED_PROPERTIES } from '@/core/var/rhine-var-base.class'
+import { RhineVarAny, StoredRhineVar } from '@/core/var/rhine-var.type'
+import SupportManager from '@/core/var/support/support-manager'
+import { YArray, YDoc, YMap, YText } from '@/index'
+import { error, log } from '@/utils/logger'
 
 // For create root RhineVar object
 export function rhineProxy<T extends object>(
@@ -23,7 +23,7 @@ export function rhineProxy<T extends object>(
   }
 
   // Create local temp YDoc and YMap
-  let target: Native = ensureNative<T>(defaultValue)
+  const target: Native = ensureNative<T>(defaultValue)
   const tempMap = new YDoc().getMap()
   tempMap.set(Connector.STATE_KEY, target)
 
@@ -34,7 +34,7 @@ export function rhineProxy<T extends object>(
   if (typeof connector === 'string' || typeof connector === 'number') {
     connector = createConnector(connector)
   }
-  connector = connector as Connector;
+  connector = connector
 
   const root = object as any
   root._options = options
@@ -48,18 +48,17 @@ export function rhineProxy<T extends object>(
     if (!connector.hasState()) {
       connector.setState(object.getNative().clone())
     }
-    (object as any)._initialize(connector.getState())
+    ;(object as any)._initialize(connector.getState())
   })
 
   return object
 }
 
-
 export function rhineProxyGeneral<T extends object>(
   data: T | Native,
-  parent: RhineVarBase | null = null
+  parent: RhineVarBase | null = null,
 ): StoredRhineVar<T> {
-  let target = ensureNative<T>(data)
+  const target = ensureNative<T>(data)
 
   const object: RhineVarBase = createRhineVar(target, parent) as any
 
@@ -68,7 +67,7 @@ export function rhineProxyGeneral<T extends object>(
     Reflect.set(object, 'value', native.toString())
   } else if (native instanceof YMap || native instanceof YArray) {
     native.forEach((value, keyString) => {
-      let key = keyString as keyof T
+      const key = keyString as keyof T
       if (isNative(value)) {
         Reflect.set(object, key, rhineProxyGeneral<T>(value, object))
       } else {
@@ -166,4 +165,3 @@ export function rhineProxyGeneral<T extends object>(
 
   return new Proxy(object, handler) as StoredRhineVar<T>
 }
-

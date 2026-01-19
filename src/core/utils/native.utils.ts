@@ -1,18 +1,18 @@
-import { YMap, YArray, YText, YXmlText, YXmlElement, YXmlFragment } from "@/index"
-import {Native, RvKey, RvPath} from "@/core/native/native.type";
-import {isArray, isMap, isObject} from "@/core/utils/data.utils";
-import RhineVarBase from "@/core/var/rhine-var-base.class";
-import {error} from "@/utils/logger";
-import YObject from "@/core/native/y-object";
-
+import { Native, RvKey, RvPath } from '@/core/native/native.type'
+import { isArray, isMap, isObject } from '@/core/utils/data.utils'
+import RhineVarBase from '@/core/var/rhine-var-base.class'
+import { YMap, YArray, YText, YXmlText, YXmlElement, YXmlFragment } from '@/index'
+import { error } from '@/utils/logger'
 
 export function isNative(value: any): boolean {
-  return value instanceof YMap
-    || value instanceof YArray
-    || value instanceof YText
-    || value instanceof YXmlFragment
-    || value instanceof YXmlElement
-    || value instanceof YXmlText
+  return (
+    value instanceof YMap ||
+    value instanceof YArray ||
+    value instanceof YText ||
+    value instanceof YXmlFragment ||
+    value instanceof YXmlElement ||
+    value instanceof YXmlText
+  )
 }
 
 export function nativeSet(target: Native, key: string | symbol, value: any): boolean {
@@ -22,7 +22,7 @@ export function nativeSet(target: Native, key: string | symbol, value: any): boo
   if (value instanceof RhineVarBase) {
     value = value.getNative()
   }
-  
+
   try {
     if (target instanceof YMap) {
       target.set(key, value)
@@ -49,7 +49,7 @@ export function nativeHas(target: Native, key: string | symbol | number): boolea
   if (typeof key !== 'string') {
     return false
   }
-  
+
   try {
     if (target instanceof YMap) {
       return target.has(key)
@@ -66,7 +66,7 @@ export function nativeHas(target: Native, key: string | symbol | number): boolea
 }
 
 export function nativeOwnKeys(target: Native): string[] {
-  let keys: string[] = []
+  const keys: string[] = []
   if (target instanceof YMap) {
     target.forEach((value, key) => {
       keys.push(key)
@@ -83,7 +83,7 @@ export function nativeDelete(target: Native, key: string | symbol): boolean {
   if (typeof key !== 'string') {
     return false
   }
-  
+
   try {
     if (target instanceof YMap) {
       if (target.has(key)) {
@@ -109,7 +109,7 @@ export function nativeGet(target: Native, key: string | symbol): any | undefined
   if (typeof key !== 'string') {
     return undefined
   }
-  
+
   try {
     if (target instanceof YMap) {
       return target.get(key)
@@ -128,14 +128,14 @@ export function jsonToNative(data: any): Native {
     return data
   }
   if (isMap(data)) {
-    let map = new YMap<any>()
+    const map = new YMap<any>()
     data.forEach((value, key) => {
       map.set(key, jsonToNative(value))
     })
     return map
   }
   if (isObject(data)) {
-    let map = new YMap<any>()
+    const map = new YMap<any>()
     Object.entries(data).forEach(([key, value]) => {
       map.set(key, jsonToNative(value))
     })
@@ -143,7 +143,7 @@ export function jsonToNative(data: any): Native {
     return map
   }
   if (isArray(data)) {
-    let array = new YArray<any>()
+    const array = new YArray<any>()
     data.forEach((value: any, index: number) => {
       array.push([jsonToNative(value)])
     })

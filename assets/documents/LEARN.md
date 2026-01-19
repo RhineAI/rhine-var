@@ -6,7 +6,6 @@
 
 </div>
 
-
 ## Simplest Usage Example
 
 ```typescript jsx
@@ -16,9 +15,9 @@ const url = 'ws://localhost:6600/room-0'
 const state = rhineProxy(defaultValue, url)
 
 function Counter() {
-  
+
   const snap = useRhine(state)
-  
+
   return <div>
     <button onClick={() => state.count-- }> -1 </button>
     <span>{snap.count}</span>
@@ -33,7 +32,7 @@ It can be a complex and large JSON data structure to store all the collaborative
 
 ## rhineProxy
 
-The core function used to create a RhineVar object, whose internal data will automatically synchronize with others.  
+The core function used to create a RhineVar object, whose internal data will automatically synchronize with others.
 
 Typically, a project will use it only once, as only one root RhineVar object is needed.
 
@@ -41,12 +40,12 @@ Typically, a project will use it only once, as only one root RhineVar object is 
 function rhineProxy<T>(defaultValue, connector, overwrite)
 ```
 
-| Parameter           | Type                       | Default | Description                                                                                                                                                                                                             |
-|--------------|--------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Parameter    | Type                     | Default | Description                                                                                                                                                                                                             |
+| ------------ | ------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | defaultValue | T                        |         | Default Value <br/>If there is no data for this room on the server, this default value is used as the project's initial value.                                                                                          |
 | connector    | RhineConnector \| string |         | Connector<br/>Pass in a connector object, a WebSocket link, or a simple room name.<br/>When a simple room name is provided, our public server will be used.<br/>For server-related information, please refer to README. |
 | overwrite    | boolean                  | false   | Overwrite Mode <br/>Even if there is data on the server, the default value will overwrite the server data. This is mainly used for debugging purposes.                                                                  |
-| return       | RhineVar\<T\>                 | /       | Root RhineVar <br/>Collaborative variable object, which contains not only collaborative data but also connection-related features.                                                                                      |
+| return       | RhineVar\<T\>            | /       | Root RhineVar <br/>Collaborative variable object, which contains not only collaborative data but also connection-related features.                                                                                      |
 
 Default Value will also be returned temporarily before the first connection to the server is established.
 
@@ -62,10 +61,10 @@ Whenever someone modifies this value, the information will be `updated on everyo
 function useRhine<T>(proxy)
 ```
 
-| Parameter           | Type                           | Default | Description                               |
-|--------------|------------------------------|---------|----------------------------------|
-| proxy | RhineVar\<T\>  |         | The RhineVar collaborative variable that needs to subscribe for updates, or any node inside it. |
-| return       | Snapshot\<RhineVar\<T\>>         | /       | The snapshot corresponding to the RhineVar.
+| Parameter | Type                     | Default | Description                                                                                     |
+| --------- | ------------------------ | ------- | ----------------------------------------------------------------------------------------------- |
+| proxy     | RhineVar\<T\>            |         | The RhineVar collaborative variable that needs to subscribe for updates, or any node inside it. |
+| return    | Snapshot\<RhineVar\<T\>> | /       | The snapshot corresponding to the RhineVar.                                                     |
 
 Note: The returned snapshot is read-only. Please do not perform any operations on it! The snapshot is only for reading data within React's XML. For all other operations (such as assignment or subscription), please operate on the original RhineVar object.
 
@@ -74,6 +73,7 @@ Note: The returned snapshot is read-only. Please do not perform any operations o
 ## Advanced Guide
 
 Interface for Example
+
 ```typescript
 export interface Group {
   id: string
@@ -88,6 +88,7 @@ export interface Person {
 ```
 
 Create RhineVar object
+
 ```typescript
 export interface Group {
   id: string
@@ -102,14 +103,15 @@ export interface Person {
 ```
 
 Event System
+
 ```typescript
 // Basic subscription for changes in the direct properties of the current node
 const subscriber: Callback = (key, value, oldValue, type) => {
   console.log('group.subscribe', key, type, ': ', oldValue, '->', value)
 }
-group.subscribe(subscriber)  // Subscribe
-group.unsubscribe(subscriber)  // Unsubscribe
-group.unsubscribeAll()  // Unsubscribe all from the current node
+group.subscribe(subscriber) // Subscribe
+group.unsubscribe(subscriber) // Unsubscribe
+group.unsubscribeAll() // Unsubscribe all from the current node
 
 // Subscribe to changes for a specific property
 group.subscribeKey('id', (key, value, oldValue, type) => {
@@ -128,9 +130,10 @@ group.people[1].subscribe(() => {
 ```
 
 Operation
+
 ```typescript
 // Access or modify it just like in JavaScript
-console.log('The first person\'s name:', group.people[0].name)
+console.log("The first person's name:", group.people[0].name)
 // LOG: The first person's name: Henry
 
 console.log('Changing group id to group-2')
@@ -153,19 +156,20 @@ console.log('Current number of people in group:', group.people.length)
 // LOG: Current number of people in group: 2
 
 console.log('Adding a new member, Jessica')
-group.people.push({name: 'Jessica', age: 19})
+group.people.push({ name: 'Jessica', age: 19 })
 // LOG: Adding a new member, Jessica
 // LOG: group.subscribeDeep ['people', 2] add :  undefined -> Proxy(RhineVarItem){xxx}
 ```
 
 Additional
+
 ```typescript
 // Use .json() to print data without proxy information more clearly
 console.log('Current people data:', group.people.json())
 // LOG: Current people data: [{…}, {…}, {…}]
 
 // Note, when assigning a new object with " = " in TypeScript, there may be type-checking issues. You can use "as" to modify the type.
-group.people[1] = {name: 'Jessica', age: 19} as ProxiedRhineVarItem<Person>  // You can also use "as any"
+group.people[1] = { name: 'Jessica', age: 19 } as ProxiedRhineVarItem<Person> // You can also use "as any"
 // LOG: group.subscribeDeep ['people', 1] delete :  {name: 'Emily', age: 22} -> undefined
 // LOG: group.subscribeDeep ['people', 1] add :  undefined -> Proxy(RhineVarItem){}
 ```
@@ -176,12 +180,12 @@ group.people[1] = {name: 'Jessica', age: 19} as ProxiedRhineVarItem<Person>  // 
 
 RhineVar and all its internal nodes can add subscriptions anywhere. Examples of usage can be seen in the "Subscribe to Events" section of the previous block. There are three forms of subscription, detailed as follows.
 
-| Type     | Subscribe Function    | Unsubscribe Function    | Unsubscribe All Function    | Callback Function Type |
-|----------|-----------------------|-------------------------|-----------------------------|------------------------|
-| Base     | subscribe             | unsubscribe             | unsubscribeAll              | Callback               |
-| Key      | subscribeKey          | unsubscribeKey          | unsubscribeAllKey           | Callback               |
-| Deep     | subscribeDeep         | unsubscribeDeep         | unsubscribeAllDeep          | DeepCallback           |
-| Synced   | subscribeSynced       | unsubscribeSynced       | unsubscribeAllSynced        | SyncedCallback         |
+| Type   | Subscribe Function | Unsubscribe Function | Unsubscribe All Function | Callback Function Type |
+| ------ | ------------------ | -------------------- | ------------------------ | ---------------------- |
+| Base   | subscribe          | unsubscribe          | unsubscribeAll           | Callback               |
+| Key    | subscribeKey       | unsubscribeKey       | unsubscribeAllKey        | Callback               |
+| Deep   | subscribeDeep      | unsubscribeDeep      | unsubscribeAllDeep       | DeepCallback           |
+| Synced | subscribeSynced    | unsubscribeSynced    | unsubscribeAllSynced     | SyncedCallback         |
 
 The subscription and unsubscription functions require passing a corresponding type of callback function.
 
@@ -197,7 +201,7 @@ Synced: Events of state changes synchronized with the server
 The information that the callback function for subscription events can provide is as follows, with the first four items being the most commonly used.
 
 | Property          | Type                                          | Description                     |
-|-------------------|-----------------------------------------------|---------------------------------|
+| ----------------- | --------------------------------------------- | ------------------------------- |
 | key               | keyof T                                       | The key of the changed property |
 | value             | T[keyof T] \| ProxiedRhineVarItem<T[keyof T]> | The new value                   |
 | oldValue          | T[keyof T]                                    | The old value                   |
@@ -210,19 +214,19 @@ The information that the callback function for subscription events can provide i
 The only difference from Callback is that key changes to path. Other properties are not repeated.
 
 | Property | Type                 | Description                                                                       |
-|----------|----------------------|-----------------------------------------------------------------------------------|
-| path     | (string \| number)[] | The path of the changed property, from the subscribed node to the target property |
+| -------- | -------------------- | --------------------------------------------------------------------------------- |
+| path     | [string \| number]() | The path of the changed property, from the subscribed node to the target property |
 
 ### ChangeType
 
 An enum representing event types, detailed as follows.
 
 | Property | Value  | Trigger Object | Description                                |
-|----------|--------|----------------|--------------------------------------------|
-| Add      | add    | YMap \| YArray | Triggered when a new property is added     | 
-| Update   | update | YMap           | Triggered when a property value is updated | 
-| Delete   | delete | YMap \| YArray | Triggered when a property is removed       | 
-| Sync     | sync   | RhineConnector | Triggered upon the first connection        | 
+| -------- | ------ | -------------- | ------------------------------------------ |
+| Add      | add    | YMap \| YArray | Triggered when a new property is added     |
+| Update   | update | YMap           | Triggered when a property value is updated |
+| Delete   | delete | YMap \| YArray | Triggered when a property is removed       |
+| Sync     | sync   | RhineConnector | Triggered upon the first connection        |
 
 Note that due to Yjs's collaborative algorithm adopting Quill's Delta protocol, when array elements update their values, it will not trigger the Update event. Instead, it will first trigger Delete and then Add, completing the combination.
 
@@ -231,7 +235,7 @@ Note that due to Yjs's collaborative algorithm adopting Quill's Delta protocol, 
 Callback for state change events synchronized with the server. Provides current synchronization state parameters.
 
 | Property | Type    | Description                                               |
-|----------|---------|-----------------------------------------------------------|
+| -------- | ------- | --------------------------------------------------------- |
 | synced   | boolean | Whether the current state is synchronized with the server |
 
 <br/>
@@ -275,9 +279,7 @@ state.json()
 Callback triggered after the first data synchronization.
 
 ```typescript
-state.afterSynced(() => {
-
-})
+state.afterSynced(() => {})
 ```
 
 ### waitSynced(): Promise\<void\>

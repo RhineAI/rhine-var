@@ -19,7 +19,7 @@ function Counter() {
     <button onClick={() => state.count-- }> -1 </button>   // Operate Anyway
     <button onClick={() => state.count++ }> +1 </button>
   </div>
-} 
+}
 ```
 
 Try: [https://rv.rhineai.com/examples/counter](https://rv.rhineai.com/examples/counter)
@@ -111,7 +111,9 @@ RHINE-VAR 提供完好的Yjs原生对象操作支持，更底层更丰富的API�
 ```bash
 npm i rhine-var
 ```
+
 或者使用 Yarn:
+
 ```bash
 yarn add rhine-var
 ```
@@ -127,9 +129,9 @@ const url = 'ws://localhost:6600/room-0'
 const state = rhineProxy(defaultValue, url)
 
 function Counter() {
-  
+
   const snap = useRhine(state)
-  
+
   return <div>
     <button onClick={() => state.count-- }> -1 </button>
     <span>{snap.count}</span>
@@ -166,7 +168,6 @@ function Counter() {
 
 #### [点击查看 完整文档 LEARN_zh.md](assets/documents/LEARN_zh.md)
 
-
 <br/>
 
 ## Server
@@ -186,6 +187,7 @@ RHINE-VAR 支持自定义服务器，以及连接协议。服务端目前完全�
 ```bash
 npm i @hocuspocus/server @hocuspocus/extension-logger @hocuspocus/extension-sqlite y-protocols yjs
 ```
+
 ```typescript
 import { Hocuspocus } from '@hocuspocus/server'
 import { Logger } from '@hocuspocus/extension-logger'
@@ -194,13 +196,11 @@ import { SQLite } from '@hocuspocus/extension-sqlite'
 const server = new Hocuspocus({
   name: 'rhine-var-server',
   port: 11600,
-  extensions: [
-    new Logger(),
-    new SQLite({database: 'db.sqlite'}),
-  ],
+  extensions: [new Logger(), new SQLite({ database: 'db.sqlite' })],
 })
 server.listen()
 ```
+
 我们还提供了一个更完整的 [Hocuspocus](https://tiptap.dev/docs/hocuspocus/introduction) 服务器 (下方链接)，支持连接前鉴权，以及将数据持久化到数据库中。
 
 Best Implementation: [https://github.com/RhineAI/rhine-var-hocuspocus-server](https://github.com/RhineAI/rhine-var-hocuspocus-server)
@@ -209,16 +209,16 @@ Best Implementation: [https://github.com/RhineAI/rhine-var-hocuspocus-server](ht
 
 原生服务端开发信息请参考: [https://docs.yjs.dev/ecosystem/connection-provider/y-websocket](https://docs.yjs.dev/ecosystem/connection-provider/y-websocket)
 
-以及我们提供的原生 Yjs  Websocket 服务器的示例: [https://github.com/RhineAI/rhine-var-server](https://github.com/RhineAI/rhine-var-server)
+以及我们提供的原生 Yjs Websocket 服务器的示例: [https://github.com/RhineAI/rhine-var-server](https://github.com/RhineAI/rhine-var-server)
 
 <br/>
 
 ## Develop
-                                                                                                                                                                                                                                                                               
+
 欢迎参与 RHINE-VAR 库的共同开发。本库内有基本的服务端，和调试用 NextJS 项目，可以满足大部分开发过程基本需求。
 
-
 ### 准备工作 仅初次使用时需执行
+
 ```bash
 # 安装依赖
 yarn install
@@ -229,10 +229,11 @@ yarn run link-next
 ```
 
 ### 开始调试
+
 ```bash
 # 启用 typescript 实时编译
 yarn run watch
-# 启用临时本地服务端 默认端口6600 
+# 启用临时本地服务端 默认端口6600
 yarn run server
 # 启动 NextJs 环境调试项目 默认端口6700
 yarn run playground
@@ -240,4 +241,3 @@ yarn run playground
 ```
 
 <br/>
-

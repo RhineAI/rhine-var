@@ -1,4 +1,4 @@
-import RhineVarConfig from "@/config/config";
+import RhineVarConfig from '@/config/config'
 
 export function log(...items: any[]) {
   if (RhineVarConfig.ENABLE_LOG) {

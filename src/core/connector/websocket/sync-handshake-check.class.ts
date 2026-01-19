@@ -1,8 +1,7 @@
-import { YMap } from "@/index"
-import {log} from "@/utils/logger";
+import { YMap } from '@/index'
+import { log } from '@/utils/logger'
 
 export default class SyncHandshakeCheck {
-
   static wait(baseMap: YMap<any>) {
     return new Promise<void>((resolve) => {
       const waitSync = (syncMap: YMap<any>) => {
@@ -35,6 +34,4 @@ export default class SyncHandshakeCheck {
       }
     })
   }
-
-
 }

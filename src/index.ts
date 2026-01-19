@@ -1,19 +1,6 @@
-import {rhineProxy, rhineProxyGeneral} from "@/core/proxy/rhine-proxy";
-import { RhineVar, RecursiveCrossRhineVar, StoredRhineVar, RhineVarAny, RecursiveObject, RecursiveArray, RecursiveMap } from "@/core/var/rhine-var.type";
-import Connector from "@/core/connector/connector.abstract";
-import {Native, RvKey, RvPath} from "@/core/native/native.type";
-import {getRhineVarConfig, enableRhineVarLog, enableRhineVarSyncHandshakeCheck} from "@/config/config";
-import RhineVarBase from "@/core/var/rhine-var-base.class";
-import RhineVarMap from "@/core/var/items/rhine-var-map.class";
-import RhineVarArray from "@/core/var/items/rhine-var-array.class";
-import RhineVarText from "@/core/var/items/rhine-var-text.class";
-import RhineVarXmlText from "@/core/var/items/rhine-var-xml-text.class";
-import RhineVarXmlElement from "@/core/var/items/rhine-var-xml-element.class";
-import RhineVarXmlFragment from "@/core/var/items/rhine-var-xml-fragment.class";
-import SupportManager from "@/core/var/support/support-manager";
-import text from "@/core/proxy/items/text";
-import map from "./core/proxy/items/map";
-import item from "./core/proxy/items/item";
+import { HocuspocusProvider } from '@hocuspocus/provider'
+import { Awareness } from 'y-protocols/awareness'
+import { WebsocketProvider } from 'y-websocket'
 import {
   Doc as YDoc,
   Array as YArray,
@@ -21,14 +8,37 @@ import {
   Text as YText,
   XmlFragment as YXmlFragment,
   XmlElement as YXmlElement,
-  XmlText as YXmlText
-} from "yjs";
-import ProxyOptions from "./core/proxy/proxy-options.interface";
-import { UndoManagerOptions } from "yjs/dist/src/utils/UndoManager";
-import { EventType } from "./core/subscriber/event-type.enum";
-import { HocuspocusProvider } from "@hocuspocus/provider";
-import { WebsocketProvider } from "y-websocket";
-import { Awareness } from "y-protocols/awareness";
+  XmlText as YXmlText,
+} from 'yjs'
+import { UndoManagerOptions } from 'yjs/dist/src/utils/UndoManager'
+
+import { getRhineVarConfig, enableRhineVarLog, enableRhineVarSyncHandshakeCheck } from '@/config/config'
+import Connector from '@/core/connector/connector.abstract'
+import { Native, RvKey, RvPath } from '@/core/native/native.type'
+import text from '@/core/proxy/items/text'
+import { rhineProxy, rhineProxyGeneral } from '@/core/proxy/rhine-proxy'
+import RhineVarBase from '@/core/var/rhine-var-base.class'
+import RhineVarMap from '@/core/var/items/rhine-var-map.class'
+import RhineVarArray from '@/core/var/items/rhine-var-array.class'
+import RhineVarText from '@/core/var/items/rhine-var-text.class'
+import RhineVarXmlText from '@/core/var/items/rhine-var-xml-text.class'
+import RhineVarXmlElement from '@/core/var/items/rhine-var-xml-element.class'
+import RhineVarXmlFragment from '@/core/var/items/rhine-var-xml-fragment.class'
+import {
+  RhineVar,
+  RecursiveCrossRhineVar,
+  StoredRhineVar,
+  RhineVarAny,
+  RecursiveObject,
+  RecursiveArray,
+  RecursiveMap,
+} from '@/core/var/rhine-var.type'
+import SupportManager from '@/core/var/support/support-manager'
+
+import item from './core/proxy/items/item'
+import map from './core/proxy/items/map'
+import ProxyOptions from './core/proxy/proxy-options.interface'
+import { EventType } from './core/subscriber/event-type.enum'
 
 export type {
   StoredRhineVar,

@@ -1,23 +1,35 @@
-import {RhineVarAny} from "@/core/var/rhine-var.type";
-import {Native} from "@/core/native/native.type";
-import { YMap, YArray, YText, YXmlText, YXmlElement, YXmlFragment } from "@/index"
-import YObject from "@/core/native/y-object";
-import RhineVarMap from "@/core/var/items/rhine-var-map.class";
-import RhineVarArray from "@/core/var/items/rhine-var-array.class";
-import RhineVarText from "@/core/var/items/rhine-var-text.class";
-import RhineVarXmlFragment from "@/core/var/items/rhine-var-xml-fragment.class";
-import RhineVarXmlElement from "@/core/var/items/rhine-var-xml-element.class";
-import RhineVarXmlText from "@/core/var/items/rhine-var-xml-text.class";
-import RhineVarBase from "@/core/var/rhine-var-base.class";
-import RhineVarObject from "@/core/var/items/rhine-var-object.class";
+import { Native } from '@/core/native/native.type'
+import YObject from '@/core/native/y-object'
+import RhineVarArray from '@/core/var/items/rhine-var-array.class'
+import RhineVarMap from '@/core/var/items/rhine-var-map.class'
+import RhineVarObject from '@/core/var/items/rhine-var-object.class'
+import RhineVarText from '@/core/var/items/rhine-var-text.class'
+import RhineVarXmlElement from '@/core/var/items/rhine-var-xml-element.class'
+import RhineVarXmlFragment from '@/core/var/items/rhine-var-xml-fragment.class'
+import RhineVarXmlText from '@/core/var/items/rhine-var-xml-text.class'
+import RhineVarBase from '@/core/var/rhine-var-base.class'
+import { RhineVarAny } from '@/core/var/rhine-var.type'
+import { YMap, YArray, YText, YXmlText, YXmlElement, YXmlFragment } from '@/index'
 
 export function createRhineVar<T extends object = any>(target: Native, parent: RhineVarBase | null): RhineVarAny<T>
-export function createRhineVar<T extends object = any>(target: YObject<any>, parent: RhineVarBase | null): RhineVarObject<T>
+export function createRhineVar<T extends object = any>(
+  target: YObject<any>,
+  parent: RhineVarBase | null,
+): RhineVarObject<T>
 export function createRhineVar<T extends object = any>(target: YMap<any>, parent: RhineVarBase | null): RhineVarMap<T>
-export function createRhineVar<T extends object = any>(target: YArray<any>, parent: RhineVarBase | null): RhineVarArray<T>
+export function createRhineVar<T extends object = any>(
+  target: YArray<any>,
+  parent: RhineVarBase | null,
+): RhineVarArray<T>
 export function createRhineVar<T extends object = any>(target: YXmlText, parent: RhineVarBase | null): RhineVarXmlText
-export function createRhineVar<T extends object = any>(target: YXmlElement<any>, parent: RhineVarBase | null): RhineVarXmlElement<T>
-export function createRhineVar<T extends object = any>(target: YXmlFragment, parent: RhineVarBase | null): RhineVarXmlFragment
+export function createRhineVar<T extends object = any>(
+  target: YXmlElement<any>,
+  parent: RhineVarBase | null,
+): RhineVarXmlElement<T>
+export function createRhineVar<T extends object = any>(
+  target: YXmlFragment,
+  parent: RhineVarBase | null,
+): RhineVarXmlFragment
 export function createRhineVar<T extends object = any>(target: YText, parent: RhineVarBase | null): RhineVarText
 export function createRhineVar<T extends object = any>(target: Native, parent: RhineVarBase | null): RhineVarAny<T> {
   if (target instanceof YObject) {

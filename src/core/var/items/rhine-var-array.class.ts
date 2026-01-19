@@ -1,15 +1,13 @@
-import RhineVarBase from "@/core/var/rhine-var-base.class";
-import {NativeType} from "@/core/native/native-type.enum";
-import {InputItem} from "@/core/var/rhine-var.type";
-
+import { NativeType } from '@/core/native/native-type.enum'
+import RhineVarBase from '@/core/var/rhine-var-base.class'
+import { InputItem } from '@/core/var/rhine-var.type'
 
 export default class RhineVarArray<T = any, N = any> extends RhineVarBase<T[]> implements Iterable<T> {
-
   _type: NativeType.Array = NativeType.Array;
 
   [key: number]: T
 
-  length: number = 0
+  length = 0
 
   insert(index: number, ...items: InputItem<N>[]) {
     return -1
@@ -19,8 +17,7 @@ export default class RhineVarArray<T = any, N = any> extends RhineVarBase<T[]> i
     return -1
   }
 
-  clear() {
-  }
+  clear() {}
 
   push(...items: InputItem<N>[]): number {
     return -1
@@ -46,8 +43,7 @@ export default class RhineVarArray<T = any, N = any> extends RhineVarBase<T[]> i
     return []
   }
 
-  forEach(callback: (value: T, index: number, array: this) => void, thisArg?: any): void {
-  }
+  forEach(callback: (value: T, index: number, array: this) => void, thisArg?: any): void {}
 
   map<U>(callback: (value: T, index: number, array: this) => U, thisArg?: any): U[] {
     return [] as U[]
@@ -169,7 +165,10 @@ export default class RhineVarArray<T = any, N = any> extends RhineVarBase<T[]> i
     return {} as U
   }
 
-  reduceRight<U>(callback: (previousValue: U, currentValue: T, currentIndex: number, array: this) => U, initialValue: U): U {
+  reduceRight<U>(
+    callback: (previousValue: U, currentValue: T, currentIndex: number, array: this) => U,
+    initialValue: U,
+  ): U {
     return {} as U
   }
 

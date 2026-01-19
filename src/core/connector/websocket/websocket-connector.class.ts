@@ -1,21 +1,21 @@
-import { YMap, YDoc } from "@/index"
-import {WebsocketProvider} from "y-websocket";
-import {ConnectorStatus} from "@/core/connector/connector-status.enum";
-import {error, log} from "@/utils/logger";
-import RhineVarConfig from "@/config/config";
-import SyncHandshakeCheck from "@/core/connector/websocket/sync-handshake-check.class";
-import Connector from "@/core/connector/connector.abstract";
+import { WebsocketProvider } from 'y-websocket'
 
-export default class WebsocketConnector extends Connector{
+import RhineVarConfig from '@/config/config'
+import { ConnectorStatus } from '@/core/connector/connector-status.enum'
+import Connector from '@/core/connector/connector.abstract'
+import SyncHandshakeCheck from '@/core/connector/websocket/sync-handshake-check.class'
+import { YDoc } from '@/index'
+import { error, log } from '@/utils/logger'
 
-  name: string = ''
-  url: string = ''
+export default class WebsocketConnector extends Connector {
+  name = ''
+  url = ''
 
   provider: WebsocketProvider | null = null
-  
+
   async connect(text: string): Promise<void> {
-    let li = this.url.lastIndexOf('/')
-    if (li == -1 || li == this.url.length -1 || !this.url.startsWith('ws')) {
+    const li = this.url.lastIndexOf('/')
+    if (li == -1 || li == this.url.length - 1 || !this.url.startsWith('ws')) {
       error('WebsocketConnector: UnSupport URL to connect room')
       return
     }
@@ -27,18 +27,14 @@ export default class WebsocketConnector extends Connector{
     this.yBaseMap = this.yDoc.getMap()
 
     return new Promise((resolve, reject) => {
-      this.provider = new WebsocketProvider(
-        this.url,
-        this.name,
-        this.yDoc!
-      )
+      this.provider = new WebsocketProvider(this.url, this.name, this.yDoc!)
       this.provider.shouldConnect = true
-      
+
       this.provider.on('status', (event: any) => {
         this.status = event.status
         log('WebsocketConnector.event status:', event.status)
       })
-      
+
       this.provider.on('sync', async (synced: boolean) => {
         if (synced) {
           if (RhineVarConfig.ENABLE_SYNC_HANDSHAKE_CHECK) {
@@ -53,20 +49,19 @@ export default class WebsocketConnector extends Connector{
           log('WebsocketConnector.event sync:', false)
         }
       })
-      
+
       this.provider.on('connection-close', (e: any) => {
         this.status = ConnectorStatus.DISCONNECTED
         log('WebsocketConnector.event connection-close:', e)
       })
-      
+
       this.provider.on('connection-error', (error: any) => {
         this.status = ConnectorStatus.DISCONNECTED
         log('WebsocketConnector.event connection-error:', error)
       })
     })
-    
   }
-  
+
   async disconnect() {
     throw new Error('Disconnecting and switching connections are not supported at the moment.')
     /*
@@ -78,5 +73,4 @@ export default class WebsocketConnector extends Connector{
     this.websocketStatus = ConnectorStatus.DISCONNECTED
     */
   }
-  
 }

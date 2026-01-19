@@ -1,15 +1,16 @@
-import RhineVarBase from "@/core/var/rhine-var-base.class";
-import {NativeType} from "@/core/native/native-type.enum";
-import {InputItem} from "@/core/var/rhine-var.type";
+import { NativeType } from '@/core/native/native-type.enum'
+import RhineVarBase from '@/core/var/rhine-var-base.class'
+import { InputItem } from '@/core/var/rhine-var.type'
 
-export default class RhineVarMap<T = any, N = any> extends RhineVarBase<{[key: string]: T}> implements Iterable<[string, T]> {
-
+export default class RhineVarMap<T = any, N = any>
+  extends RhineVarBase<Record<string, T>>
+  implements Iterable<[string, T]>
+{
   _type: NativeType.Map = NativeType.Map
 
-  size: number = -1
+  size = -1
 
-  set(key: string, value: InputItem<N>): void {
-  }
+  set(key: string, value: InputItem<N>): void {}
 
   get(key: string): T | undefined {
     return {} as T | undefined
@@ -19,15 +20,13 @@ export default class RhineVarMap<T = any, N = any> extends RhineVarBase<{[key: s
     return false
   }
 
-  forEach(callback: (value: T, key: string, map: this) => void, thisArg?: any): void {
-  }
+  forEach(callback: (value: T, key: string, map: this) => void, thisArg?: any): void {}
 
   delete(key: string): boolean {
     return false
   }
 
-  clear(): void {
-  }
+  clear(): void {}
 
   keys(): IterableIterator<string> {
     return {} as IterableIterator<string>
@@ -48,5 +47,4 @@ export default class RhineVarMap<T = any, N = any> extends RhineVarBase<{[key: s
   // Enable this if we need to use dynamic keys later
   // @ts-ignore
   // [key: string]: T | undefined;
-
 }

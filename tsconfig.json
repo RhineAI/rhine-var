@@ -14,13 +14,13 @@
     "emitDeclarationOnly": false,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
     "plugins": [
       { "transform": "typescript-transform-paths" },
-      { "transform": "typescript-transform-paths", "afterDeclarations": true },
+      { "transform": "typescript-transform-paths", "afterDeclarations": true }
     ]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "playground", "assets", "scripts", ".github", ".idea", ".vscode"],
+  "exclude": ["node_modules", "dist", "playground", "assets", "scripts", ".github", ".idea", ".vscode"]
 }

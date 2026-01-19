@@ -1,6 +1,4 @@
-
 declare global {
-  
   interface ReactUMD {
     useState: typeof import('react').useState
     useEffect: typeof import('react').useEffect
@@ -8,7 +6,6 @@ declare global {
   }
 
   const React: typeof import('react') | undefined
-
 }
 
 declare module 'react' {

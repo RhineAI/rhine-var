@@ -1,10 +1,8 @@
-import {YMap} from "@/index";
-import {ensureNativeOrBasic} from "@/core/utils/var.utils";
-import RhineVarMap from "@/core/var/items/rhine-var-map.class";
+import { ensureNativeOrBasic } from '@/core/utils/var.utils'
+import RhineVarMap from '@/core/var/items/rhine-var-map.class'
+import { YMap } from '@/index'
 
-export default function map<T>(defaultValue?: {
-  [key: string]: T
-}): RhineVarMap<T> {
+export default function map<T>(defaultValue?: Record<string, T>): RhineVarMap<T> {
   if (!defaultValue) {
     defaultValue = {}
   }

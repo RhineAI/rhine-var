@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import React from "react";
-import {enableRhineVarLog, rhineProxy, text, map, item} from "rhine-var";
+import React from 'react'
+import { enableRhineVarLog, rhineProxy, text } from 'rhine-var'
 
 console.log('\n\n=================== Rhine Var Playground ===================\n\n')
 
@@ -13,7 +13,7 @@ const defaultValue = {
 
 const url = 'room-11'
 const state = rhineProxy(defaultValue, url, {
-  overwrite: true
+  overwrite: true,
 })
 
 state.afterSynced(async () => {
@@ -30,12 +30,8 @@ state.afterSynced(async () => {
   undoManager.undo()
 
   console.log(state.text.value)
-
 })
 
-
 export default function EasyState() {
-
-  return <div className='page'>
-  </div>
+  return <div className='page'></div>
 }

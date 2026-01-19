@@ -1,13 +1,12 @@
-import RhineVarBase from '@/core/var/rhine-var-base.class';
-import { NativeType } from '@/core/native/native-type.enum';
+import { NativeType } from '@/core/native/native-type.enum'
+import RhineVarBase from '@/core/var/rhine-var-base.class'
 
 export default class RhineVarText extends RhineVarBase implements Iterable<string> {
-
   _type: NativeType.Text = NativeType.Text
 
-  value: string = ''
+  value = ''
 
-  length: number = -1
+  length = -1
 
   json(): string {
     return super.json()
@@ -21,9 +20,7 @@ export default class RhineVarText extends RhineVarBase implements Iterable<strin
     return -1
   }
 
-  clear() {
-
-  }
+  clear() {}
 
   at(index: number): string {
     return ''
@@ -164,5 +161,4 @@ export default class RhineVarText extends RhineVarBase implements Iterable<strin
   [Symbol.iterator](): IterableIterator<string> {
     return {} as IterableIterator<string>
   }
-
 }

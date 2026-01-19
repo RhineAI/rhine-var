@@ -1,7 +1,8 @@
-import {EventType} from "@/core/subscriber/event-type.enum";
-import {Transaction, YArrayEvent, YMapEvent, YTextEvent} from "yjs";
-import {RvPath} from "@/core/native/native.type";
-import {StoredRhineVar} from "@/core/var/rhine-var.type";
+import { Transaction, YArrayEvent, YMapEvent, YTextEvent } from 'yjs'
+
+import { RvPath } from '@/core/native/native.type'
+import { EventType } from '@/core/subscriber/event-type.enum'
+import { StoredRhineVar } from '@/core/var/rhine-var.type'
 
 export type Subscriber<T> = (
   type: EventType,
@@ -9,7 +10,7 @@ export type Subscriber<T> = (
   value: T[keyof T] extends object ? T[keyof T] | StoredRhineVar<T[keyof T]> : T[keyof T],
   oldValue: T[keyof T],
   nativeEvent: YMapEvent<any> | YArrayEvent<any> | YTextEvent,
-  nativeTransaction: Transaction
+  nativeTransaction: Transaction,
 ) => void
 
 export type KeySubscriber<T> = (
@@ -17,16 +18,16 @@ export type KeySubscriber<T> = (
   value: T[keyof T] extends object ? T[keyof T] | StoredRhineVar<T[keyof T]> : T[keyof T],
   oldValue: T[keyof T],
   nativeEvent: YMapEvent<any> | YArrayEvent<any> | YTextEvent,
-  nativeTransaction: Transaction
+  nativeTransaction: Transaction,
 ) => void
 
 export type DeepSubscriber<T> = (
   type: EventType,
   path: RvPath,
-  value: any | StoredRhineVar<any>,
+  value: any | StoredRhineVar,
   oldValue: any,
   nativeEvent: YMapEvent<any> | YArrayEvent<any> | YTextEvent,
-  nativeTransaction: Transaction
+  nativeTransaction: Transaction,
 ) => void
 
 export type SyncedSubscriber = (synced: boolean) => void

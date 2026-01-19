@@ -1,13 +1,11 @@
-import {Native, RhineVarAny, YArray} from "@/index";
-import SupportBase from "@/core/var/support/support-base";
-import {ensureJsonOrBasic, ensureNativeOrBasic, isRhineVar} from "@/core/utils/var.utils";
-import RhineVarArray from "@/core/var/items/rhine-var-array.class";
-import {isNative} from "@/core/utils/native.utils";
-import {RecursiveArray} from "@/core/var/rhine-var.type";
-
+import { isNative } from '@/core/utils/native.utils'
+import { ensureJsonOrBasic, ensureNativeOrBasic, isRhineVar } from '@/core/utils/var.utils'
+import RhineVarArray from '@/core/var/items/rhine-var-array.class'
+import { RecursiveArray } from '@/core/var/rhine-var.type'
+import SupportBase from '@/core/var/support/support-base'
+import { Native, RhineVarAny, YArray } from '@/index'
 
 export default class SupportArray extends SupportBase {
-
   static TARGET_TAG = 'RhineVarArray'
 
   static convertProperty<T>(key: string | symbol, object: RhineVarAny): any {
@@ -27,16 +25,15 @@ export default class SupportArray extends SupportBase {
     }
 
     const getJson = (i: number) => {
-      let item = get(i)
+      const item = get(i)
       if (isNative(item)) {
         return (item as Native).toJSON() as T
       }
       if (isRhineVar(item)) {
         return item.json()
       }
-      return item as T
+      return item
     }
-
 
     switch (key) {
       case 'insert':
@@ -68,16 +65,16 @@ export default class SupportArray extends SupportBase {
       case 'pop':
         return (): T | undefined => {
           if (native.length === 0) return undefined
-          let key = native.length - 1
-          let item = get(key)
+          const key = native.length - 1
+          const item = get(key)
           native.delete(key)
           return item
         }
       case 'shift':
         return (): T | undefined => {
           if (native.length === 0) return undefined
-          let key = 0
-          let item = get(key)
+          const key = 0
+          const item = get(key)
           native.delete(key)
           return item
         }
@@ -88,7 +85,7 @@ export default class SupportArray extends SupportBase {
           if (end < 0) end = native.length + end
           if (start < 0) start = 0
           if (end > native.length) end = native.length
-          let result = []
+          const result = []
           for (let i = start; i < end; i++) {
             result.push(get(i))
           }
@@ -98,12 +95,12 @@ export default class SupportArray extends SupportBase {
         return (start: number, deleteCount: number, ...items: any[]): T[] => {
           const removed = []
           for (let i = start; i < start + deleteCount; i++) {
-            let item = getJson(i)
+            const item = getJson(i)
             removed.push(item)
           }
           native.delete(start, deleteCount)
           if (items.length > 0) {
-            let nativeItems: any[] = []
+            const nativeItems: any[] = []
             for (let i = 0; i < items.length; i++) {
               nativeItems.push(ensureNativeOrBasic(items[i]))
             }
@@ -113,7 +110,7 @@ export default class SupportArray extends SupportBase {
         }
       case 'forEach':
         return (callback: (value: T, index: number, arr: RecursiveArray<T>) => void) => {
-          return native.forEach((yValue, yIndex, yArray) => {
+          native.forEach((yValue, yIndex, yArray) => {
             callback(get(yIndex), yIndex, array)
           })
         }
@@ -127,15 +124,15 @@ export default class SupportArray extends SupportBase {
         }
       case 'filter':
         return (callback: (value: T, index: number, arr: RecursiveArray<T>) => boolean): T[] => {
-          let result: T[] = []
+          const result: T[] = []
           for (let i = 0; i < native.length; i++) {
-            let item = get(i)
+            const item = get(i)
             if (callback(item, i, array)) result.push(item)
           }
           return result
         }
       case 'indexOf':
-          return (searchElement: any, fromIndex: number = 0) => {
+        return (searchElement: any, fromIndex = 0) => {
           // fromIndex Optional
           // Zero-based index at which to start searching, converted to an integer.
           //
@@ -195,17 +192,18 @@ export default class SupportArray extends SupportBase {
       case 'with':
         return (i: number, value: any): T[] => {
           if (i < 0) i = native.length + i
-          if (i < 0 || i >= native.length) throw 'RangeError: Unexpect index ' + i + ' in RhineVarArray(' + native.length + ')'
+          if (i < 0 || i >= native.length)
+            throw 'RangeError: Unexpect index ' + i + ' in RhineVarArray(' + native.length + ')'
           const arr = array.json() as T[]
           arr[i] = ensureJsonOrBasic(value) as T
           return arr
         }
       case 'join':
-        return (str: string = ','): string => {
+        return (str = ','): string => {
           let result = ''
           for (let i = 0; i < native.length; i++) {
             if (i > 0) result += str
-            let item = getJson(i)
+            const item = getJson(i)
             result += item
           }
           return result
@@ -225,17 +223,23 @@ export default class SupportArray extends SupportBase {
           return true
         }
       case 'find':
-        return (callback: (value: T, index: number, arr: RecursiveArray<T>) => boolean, thisArg?: any): T | undefined => {
+        return (
+          callback: (value: T, index: number, arr: RecursiveArray<T>) => boolean,
+          thisArg?: any,
+        ): T | undefined => {
           for (let i = 0; i < native.length; i++) {
-            let item = get(i)
+            const item = get(i)
             if (callback(item, i, array)) return item
           }
           return undefined
         }
       case 'findLast':
-        return (callback: (value: T, index: number, arr: RecursiveArray<T>) => boolean, thisArg?: any): T | undefined => {
+        return (
+          callback: (value: T, index: number, arr: RecursiveArray<T>) => boolean,
+          thisArg?: any,
+        ): T | undefined => {
           for (let i = native.length - 1; i >= 0; i--) {
-            let item = get(i)
+            const item = get(i)
             if (callback(item, i, array)) return item
           }
           return undefined
@@ -256,18 +260,18 @@ export default class SupportArray extends SupportBase {
         }
       case 'entries':
         return (): IterableIterator<[number, T]> => {
-          let i = 0;
+          let i = 0
           return {
             next() {
               if (i < native.length) {
-                return {value: [i, get(i++)], done: false}
+                return { value: [i, get(i++)], done: false }
               } else {
-                return {value: undefined, done: true}
+                return { value: undefined, done: true }
               }
             },
             [Symbol.iterator]() {
               return this
-            }
+            },
           }
         }
       case 'keys':
@@ -282,7 +286,7 @@ export default class SupportArray extends SupportBase {
               }
             },
             [Symbol.iterator]() {
-              return this;
+              return this
             },
           }
         }
@@ -292,9 +296,9 @@ export default class SupportArray extends SupportBase {
           return {
             next() {
               if (i < native.length) {
-                return {value: get(i++), done: false}
+                return { value: get(i++), done: false }
               } else {
-                return {value: undefined, done: true}
+                return { value: undefined, done: true }
               }
             },
             [Symbol.iterator]() {
@@ -318,14 +322,14 @@ export default class SupportArray extends SupportBase {
           return array
         }
       case 'fill':
-        return (value: any, start: number = 0, end: number = native.length): RecursiveArray<T> => {
+        return (value: any, start = 0, end: number = native.length): RecursiveArray<T> => {
           if (start < 0) start = native.length + start
           if (end < 0) end = native.length + end
           if (start < 0) start = 0
           if (end > native.length) end = native.length
           if (start >= end) return array
           native.delete(start, end - start)
-          let items: any[] = []
+          const items: any[] = []
           for (let i = start; i < end; i++) {
             items.push(ensureNativeOrBasic(value))
           }
@@ -334,7 +338,7 @@ export default class SupportArray extends SupportBase {
         }
       case 'concat':
         return (...items: any[]): T[] => {
-          let result = array.json() as any[]
+          const result = array.json()
           return result.concat(...items.map(ensureNativeOrBasic))
         }
       case 'toReversed':
@@ -350,7 +354,7 @@ export default class SupportArray extends SupportBase {
           return array.json().splice(start, deleteCount, ...items)
         }
       case 'copyWithin':
-        return (target: number, start: number = 0, end: number = native.length): RecursiveArray<T> => {
+        return (target: number, start = 0, end: number = native.length): RecursiveArray<T> => {
           if (target < 0) target = native.length + target
           if (start < 0) start = native.length + start
           if (end < 0) end = native.length + end
@@ -377,7 +381,7 @@ export default class SupportArray extends SupportBase {
           return array.json().toLocaleString()
         }
       case 'flat':
-        return <U = any>(depth: number = 1): U[] => {
+        return <U = any>(depth = 1): U[] => {
           return array.json().flat(depth) as U[]
         }
       case 'flatMap':
@@ -385,11 +389,17 @@ export default class SupportArray extends SupportBase {
           return array.json().flatMap(callback, thisArg)
         }
       case 'reduce':
-        return <U>(callback: (previousValue: U, currentValue: T, currentIndex: number, arr: T[]) => U, initialValue: U) => {
+        return <U>(
+          callback: (previousValue: U, currentValue: T, currentIndex: number, arr: T[]) => U,
+          initialValue: U,
+        ) => {
           return array.json().reduce(callback, initialValue)
         }
       case 'reduceRight':
-        return <U>(callback: (previousValue: U, currentValue: T, currentIndex: number, arr: T[]) => U, initialValue: U) => {
+        return <U>(
+          callback: (previousValue: U, currentValue: T, currentIndex: number, arr: T[]) => U,
+          initialValue: U,
+        ) => {
           return array.json().reduceRight(callback, initialValue)
         }
       case Symbol.iterator:
@@ -398,9 +408,9 @@ export default class SupportArray extends SupportBase {
           return {
             next() {
               if (i < native.length) {
-                return {value: get(i++), done: false}
+                return { value: get(i++), done: false }
               } else {
-                return {value: undefined, done: true}
+                return { value: undefined, done: true }
               }
             },
             [Symbol.iterator]() {
@@ -478,6 +488,5 @@ export default class SupportArray extends SupportBase {
     'reduceRight',
   ])
 
-  static UNSUPPORTED_PROPERTIES = new Set<string | symbol>([
-  ])
+  static UNSUPPORTED_PROPERTIES = new Set<string | symbol>([])
 }

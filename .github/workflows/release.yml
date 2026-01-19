@@ -8,7 +8,6 @@ on:
       - 'package.json'
 
 jobs:
-
   Version:
     name: Analysis Version
     runs-on: ubuntu-latest
@@ -26,11 +25,11 @@ jobs:
         run: |
           CURRENT_VERSION=$(jq -r .version package.json)
           echo "Current version: $CURRENT_VERSION"
-          
+
           git checkout HEAD~1 -- package.json 2>/dev/null || true
           PREVIOUS_VERSION=$(jq -r .version package.json 2>/dev/null || echo "0.0.0")
           echo "Previous version: $PREVIOUS_VERSION"
-          
+
           if [[ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]]; then
             echo "version_changed=true" >> $GITHUB_OUTPUT
             echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
@@ -54,10 +53,9 @@ jobs:
         with:
           tag_name: v${{ needs.Version.outputs.current_version }}
           release_name: v${{ needs.Version.outputs.current_version }}
-          body: "Install: https://www.npmjs.com/package/rhine-var"
+          body: 'Install: https://www.npmjs.com/package/rhine-var'
           draft: false
           prerelease: false
-  
 
   Publish:
     name: Publish to NPM
@@ -65,7 +63,6 @@ jobs:
     if: ${{ needs.Version.outputs.version_changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -95,7 +92,7 @@ jobs:
       - name: Setup Node.js for NPM
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
           registry-url: https://registry.npmjs.org/
 
       - name: Publish to NPM
@@ -112,7 +109,6 @@ jobs:
       contents: read
       packages: write
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v4
 

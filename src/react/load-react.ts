@@ -34,7 +34,7 @@ export default function loadReact(): ReactType {
   // 2B. ESM 动态导入
   if (supportsDynamicImport) {
     // TODO: Promise is not supported
-    return import('react').then(m => m.default || m).catch(() => null) as any
+    return import('react').then((m) => m.default || m).catch(() => null) as any
   }
 
   // 3. React Native 特殊处理

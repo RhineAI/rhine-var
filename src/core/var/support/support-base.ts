@@ -1,8 +1,7 @@
-import {RhineVarAny} from "@/core/var/rhine-var.type";
+import { RhineVarAny } from '@/core/var/rhine-var.type'
 
 export default class SupportBase {
-
-  static TARGET_TAG: string = 'RhineVar'
+  static TARGET_TAG = 'RhineVar'
 
   static hasProperty<T>(key: string | symbol): boolean {
     if (this.SUPPORTED_PROPERTIES.has(key)) {

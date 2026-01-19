@@ -1,10 +1,8 @@
-import {RhineVarAny, YText} from "@/index";
-import SupportBase from "@/core/var/support/support-base";
-import RhineVarText from "@/core/var/items/rhine-var-text.class";
-
+import RhineVarText from '@/core/var/items/rhine-var-text.class'
+import SupportBase from '@/core/var/support/support-base'
+import { RhineVarAny, YText } from '@/index'
 
 export default class SupportText extends SupportBase {
-
   static TARGET_TAG = 'RhineVarText'
 
   static convertProperty<T>(key: string | symbol, object: RhineVarAny): any {
@@ -218,6 +216,5 @@ export default class SupportText extends SupportBase {
     'valueOf',
   ])
 
-  static UNSUPPORTED_PROPERTIES = new Set<string | symbol>([
-  ])
+  static UNSUPPORTED_PROPERTIES = new Set<string | symbol>([])
 }

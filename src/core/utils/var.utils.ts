@@ -1,29 +1,33 @@
-import RhineVarMap from "@/core/var/items/rhine-var-map.class";
-import RhineVarArray from "@/core/var/items/rhine-var-array.class";
-import RhineVarText from "@/core/var/items/rhine-var-text.class";
-import RhineVarXmlFragment from "@/core/var/items/rhine-var-xml-fragment.class";
-import RhineVarXmlElement from "@/core/var/items/rhine-var-xml-element.class";
-import RhineVarXmlText from "@/core/var/items/rhine-var-xml-text.class";
-import RhineVarBase from "@/core/var/rhine-var-base.class";
-import {RhineVarAny, StoredRhineVar} from "@/core/var/rhine-var.type";
-import {rhineProxyGeneral} from "@/core/proxy/rhine-proxy";
-import {isNative, jsonToNative} from "@/core/utils/native.utils";
-import {isObjectOrArray} from "@/core/utils/data.utils";
-import {Native} from "@/core/native/native.type";
-import RhineVarObject from "@/core/var/items/rhine-var-object.class";
-
+import { Native } from '@/core/native/native.type'
+import { rhineProxyGeneral } from '@/core/proxy/rhine-proxy'
+import { isObjectOrArray } from '@/core/utils/data.utils'
+import { isNative, jsonToNative } from '@/core/utils/native.utils'
+import RhineVarArray from '@/core/var/items/rhine-var-array.class'
+import RhineVarMap from '@/core/var/items/rhine-var-map.class'
+import RhineVarObject from '@/core/var/items/rhine-var-object.class'
+import RhineVarText from '@/core/var/items/rhine-var-text.class'
+import RhineVarXmlElement from '@/core/var/items/rhine-var-xml-element.class'
+import RhineVarXmlFragment from '@/core/var/items/rhine-var-xml-fragment.class'
+import RhineVarXmlText from '@/core/var/items/rhine-var-xml-text.class'
+import RhineVarBase from '@/core/var/rhine-var-base.class'
+import { RhineVarAny, StoredRhineVar } from '@/core/var/rhine-var.type'
 
 export function isRhineVar(value: any) {
-  return value instanceof RhineVarObject
-    || value instanceof RhineVarMap
-    || value instanceof RhineVarArray
-    || value instanceof RhineVarText
-    || value instanceof RhineVarXmlFragment
-    || value instanceof RhineVarXmlElement
-    || value instanceof RhineVarXmlText
+  return (
+    value instanceof RhineVarObject ||
+    value instanceof RhineVarMap ||
+    value instanceof RhineVarArray ||
+    value instanceof RhineVarText ||
+    value instanceof RhineVarXmlFragment ||
+    value instanceof RhineVarXmlElement ||
+    value instanceof RhineVarXmlText
+  )
 }
 
-export function ensureRhineVar<T extends object = any>(value: T | Native, parent: RhineVarBase<any>): StoredRhineVar<T> | any {
+export function ensureRhineVar<T extends object = any>(
+  value: T | Native,
+  parent: RhineVarBase,
+): StoredRhineVar<T> | any {
   if (isNative(value)) {
     return rhineProxyGeneral(value as Native, parent)
   }
@@ -67,7 +71,13 @@ export function ensureNativeOrBasic<T = any>(value: T): Native | Basic {
 }
 
 export function isBasic(value: any): value is Basic {
-  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null || value === undefined
+  return (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    value === null ||
+    value === undefined
+  )
 }
 
 export function ensureJsonOrBasic<T = any>(value: T | Native | RhineVarAny): Basic | object {

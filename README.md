@@ -4,7 +4,6 @@
 
 Rhine Variable — A self-synchronizing variable for collaboration.
 
-
 [English](README.md) &nbsp; | &nbsp; [中文](README_zh.md)
 
 <img src='./assets/images/example_counter.png' style="border-radius: 10px"/>
@@ -20,7 +19,7 @@ function Counter() {
     <button onClick={() => state.count-- }> -1 </button>   // Operate Anyway
     <button onClick={() => state.count++ }> +1 </button>
   </div>
-} 
+}
 ```
 
 Try: [https://rv.rhineai.com/examples/counter](https://rv.rhineai.com/examples/counter)
@@ -42,15 +41,19 @@ Try: [https://rv.rhineai.com/examples/counter](https://rv.rhineai.com/examples/c
 <div style="height: 6px"></div>
 
 ### Concise and Efficient Syntax Design
+
 RhineVar draws inspiration from the design philosophy of the Valtio state management library, `significantly reducing the learning curve`. Allowing developers to handle data seamlessly, as if `working with standard variables`.
 
 ### Comprehensive Type Support
+
 RhineVar offers full type hints and checks, ensuring `Precise Code Completion` and `Static Analysis` during development. This not only improves the development experience but also reduces potential errors, making it especially `suitable for TypeScript projects`, enhancing code safety and reliability.
 
 ### Distributed Real-time Collaboration Algorithm
+
 The underlying collaboration algorithm of RhineVar is `Powered By the Robust Yjs Library`. Using the CRDT (Conflict-free Replicated Data Type) algorithm, it ensures eventual consistency even in multi-user and offline environments.
 
 ### Almost No Structural Complexity Limitations
+
 There is almost no upper limit. It can be an `Extremely Complex and Large Data Structure` to accommodate all the data for a large project. But at the very least, it is `a JavaScript Object`.
 
 <br/>
@@ -58,27 +61,35 @@ There is almost no upper limit. It can be an `Extremely Complex and Large Data S
 <summary><b>More Advantages of RHINE-VAR</b></summary>
 
 ### High Performance with Low Bandwidth Requirements
+
 The data synchronization and conflict resolution mechanism is highly efficient. Leveraging Yjs's `Incremental Update Mechanism`, only necessary data changes are transmitted rather than the entire document, making it ideal for bandwidth-constrained environments and reducing unnecessary data transfers.
 
 ### Strong Offline Support
+
 Users can continue to work even while offline. Once reconnected, all changes are automatically synchronized, ensuring `no data is lost or conflicted`. This is crucial for building offline-first applications.
 
 ### Cross-platform and Framework Agnostic
+
 RhineVar can be used in `All JavaScript Environments`, including browsers, Node.js, and other JavaScript platforms. It integrates with multiple frontend frameworks and libraries such as Next.js, React, Vue.js, ProseMirror, and more.
 
 ### Lightweight and Extensible
+
 RhineVar is a highly lightweight library, with its core package `only a few KB` in size, making it suitable for various frontend applications. Its modular architecture supports feature extensions, allowing developers to import or develop custom modules as needed.
 
 ### Decentralized Architecture
+
 With a decentralized architecture, collaborative editing becomes more scalable, efficient, and fault-tolerant. Peer-to-peer data transfer is supported without relying on a central server (currently under development).
 
 ### Native Yjs Support
+
 RhineVar offers full support for native Yjs object operations, providing lower-level, richer API support. `Direct operations on Yjs objects automatically trigger updates in RhineVar`.
 
 ### More Friendly and Complete Event System
+
 RhineVar offers an extensive event subscription and listening system with `Intuitive Data Change Events`. It also supports deep data change monitoring within objects, catering to a wide range of use cases.
 
 ### Fully Open Source
+
 This is a fully open-source project, licensed under the `Apache-2.0 license` on GitHub. You are `Free to use it for both Commercial and Non-commercial Projects`, and it allows modification and distribution, as long as the original copyright notice is retained.
 
 </details>
@@ -86,6 +97,7 @@ This is a fully open-source project, licensed under the `Apache-2.0 license` on 
 <br/>
 
 ## Contact Us
+
 Welcome to join our WeChat group for communication. We look forward to having more community members participate in the creation of rhine-var.
 
 WeChat: [FNA-04]()
@@ -95,10 +107,13 @@ Email: [RhineAILab@gmail.com](rhineailab@gmail.com) & [RhineAI@163.com](RhineAI@
 <br/>
 
 ## Install
+
 ```bash
 npm i rhine-var
 ```
+
 Or using Yarn:
+
 ```bash
 yarn add rhine-var
 ```
@@ -114,9 +129,9 @@ const url = 'ws://localhost:6600/room-0'
 const state = rhineProxy(defaultValue, url)
 
 function Counter() {
-  
+
   const snap = useRhine(state)
-  
+
   return <div>
     <button onClick={() => state.count-- }> -1 </button>
     <span>{snap.count}</span>
@@ -150,9 +165,7 @@ Note: The returned snapshot is read-only. Please do not perform any operations o
 
 #### [Click to view the full document: LEARN.md](assets/documents/LEARN.md)
 
-
 <br/>
-
 
 ## Server
 
@@ -171,6 +184,7 @@ He has other servers, but it requires a high-quality Yjs WebSocket server. Based
 ```bash
 npm i @hocuspocus/server @hocuspocus/extension-logger @hocuspocus/extension-sqlite y-protocols yjs
 ```
+
 ```typescript
 import { Hocuspocus } from '@hocuspocus/server'
 import { Logger } from '@hocuspocus/extension-logger'
@@ -179,10 +193,7 @@ import { SQLite } from '@hocuspocus/extension-sqlite'
 const server = new Hocuspocus({
   name: 'rhine-var-server',
   port: 11600,
-  extensions: [
-    new Logger(),
-    new SQLite({database: 'db.sqlite'}),
-  ],
+  extensions: [new Logger(), new SQLite({ database: 'db.sqlite' })],
 })
 server.listen()
 ```
@@ -197,10 +208,10 @@ Original server-side development reference: [https://docs.yjs.dev/ecosystem/conn
 
 And we also provide the original Yjs WebSocket server example: [https://github.com/RhineAI/rhine-var-server](https://github.com/RhineAI/rhine-var-server)
 
-
 ## Develop
 
 ### Preparation (Only needed for the first-time setup)
+
 ```bash
 # Install dependencies
 yarn install
@@ -211,6 +222,7 @@ yarn run link-next
 ```
 
 ### Start Debugging
+
 ```bash
 # Enable real-time TypeScript compilation
 yarn run watch

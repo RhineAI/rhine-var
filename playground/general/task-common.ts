@@ -1,15 +1,17 @@
-import {enableRhineVarLog, rhineProxy} from "../../src";
-
+import { enableRhineVarLog, rhineProxy } from '../../src'
 
 console.log('\n\n=================== Rhine Var Playground ===================\n\n')
 
 enableRhineVarLog(false)
 
-const state = rhineProxy({
+const state = rhineProxy(
+  {
     count: 0,
     name: 'Rhine Var',
-    items: [1, 2, 3]
-}, 'ws://rvp.rhineai.com/task-common')
+    items: [1, 2, 3],
+  },
+  'ws://rvp.rhineai.com/task-common',
+)
 
 console.log('Initial state:', state.json())
 

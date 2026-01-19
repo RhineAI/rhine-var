@@ -1,15 +1,14 @@
-import SupportArray from "@/core/var/support/class/support-array.class";
-import RhineVarArray from "@/core/var/items/rhine-var-array.class";
-import RhineVarMap from "@/core/var/items/rhine-var-map.class";
-import RhineVarText from "@/core/var/items/rhine-var-text.class";
-import {RhineVarAny} from "@/core/var/rhine-var.type";
-import RhineVarObject from "@/core/var/items/rhine-var-object.class";
-import SupportMap from "@/core/var/support/class/support-map.class";
-import SupportText from "@/core/var/support/class/support-text.class";
-import SupportObject from "@/core/var/support/class/support-object.class";
+import RhineVarArray from '@/core/var/items/rhine-var-array.class'
+import RhineVarMap from '@/core/var/items/rhine-var-map.class'
+import RhineVarObject from '@/core/var/items/rhine-var-object.class'
+import RhineVarText from '@/core/var/items/rhine-var-text.class'
+import { RhineVarAny } from '@/core/var/rhine-var.type'
+import SupportArray from '@/core/var/support/class/support-array.class'
+import SupportMap from '@/core/var/support/class/support-map.class'
+import SupportObject from '@/core/var/support/class/support-object.class'
+import SupportText from '@/core/var/support/class/support-text.class'
 
 export default class SupportManager {
-
   static convertProperty<T>(key: string | symbol, object: RhineVarAny) {
     // console.log('SupportManager.convertProperty', key, object)
     if (object instanceof RhineVarArray) {
@@ -24,5 +23,4 @@ export default class SupportManager {
 
     return null
   }
-
 }
