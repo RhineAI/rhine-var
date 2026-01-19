@@ -2,7 +2,7 @@ import { enableRhineVarLog, rhineProxy } from '../../src'
 
 console.log('\n\n=================== Rhine Var Playground ===================\n\n')
 
-enableRhineVarLog(false)
+enableRhineVarLog(true)
 
 const state = rhineProxy(
   {
@@ -10,23 +10,28 @@ const state = rhineProxy(
     name: 'Rhine Var',
     items: [1, 2, 3],
   },
-  'ws://rvp.rhineai.com/task-common',
+  'ws://localhost:11600/task-common',
 )
 
-console.log('Initial state:', state.json())
+console.log(state.json())
 
-// Test mutations
-state.count++
-console.log('After count++:', state.count)
+state.afterSynced(() => {
+  console.log('Initial state:', state.json())
 
-state.name = 'Updated Name'
-console.log('After name update:', state.name)
+  // Test mutations
+  state.count++
+  console.log('After count++:', state.count)
 
-state.items.push(4)
-console.log('After items.push(4):', state.items.json())
+  state.name = 'Updated Name'
+  console.log('After name update:', state.name)
 
-console.log('\nFinal state:', state.json())
+  state.items.push(4)
+  console.log('After items.push(4):', state.items.json())
 
-console.log('\nPlayground test completed successfully!')
+  console.log('\nFinal state:', state.json())
 
-process.exit(0)
+  console.log('\nPlayground test completed successfully!')
+
+  process.exit(0)
+
+})

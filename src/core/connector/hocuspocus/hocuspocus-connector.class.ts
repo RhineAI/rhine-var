@@ -1,4 +1,4 @@
-import { HocuspocusProvider } from '@hocuspocus/provider'
+import {HocuspocusProvider} from '@hocuspocus/provider'
 
 import RhineVarConfig from '@/config/config'
 import { ConnectorStatus } from '@/core/connector/connector-status.enum'
@@ -31,37 +31,21 @@ export default class HocuspocusConnector extends Connector {
         url: this.url,
         name: this.name,
         document: this.yDoc!,
-      })
-
-      this.provider.on('status', (event: any) => {
-        this.status = event.status
-        log('HocuspocusProvider.event status:', event.status)
-      })
-
-      this.provider.on('sync', async (synced: boolean) => {
-        log('HocuspocusProvider.event sync:', synced)
-        if (synced) {
+        onStatus: ({ status }) => {
+          this.status = status.toUpperCase() as ConnectorStatus
+          log('HocuspocusProvider.event status:', status)
+        },
+        onSynced: async () => {
+          log('HocuspocusProvider.event synced')
           if (RhineVarConfig.ENABLE_SYNC_HANDSHAKE_CHECK) {
             await SyncHandshakeCheck.wait(this.yBaseMap!)
           }
           log('HocuspocusProvider.event base map:', this.yBaseMap!.toJSON())
           this.synced = true
           this.clientId = this.yDoc!.clientID
-          this.emitSynced(synced)
+          this.emitSynced(true)
           resolve()
-        } else {
-          log('HocuspocusProvider.event sync:', false)
-        }
-      })
-
-      this.provider.on('connection-close', (e: any) => {
-        this.status = ConnectorStatus.DISCONNECTED
-        log('HocuspocusProvider.event connection-close:', e)
-      })
-
-      this.provider.on('connection-error', (error: any) => {
-        this.status = ConnectorStatus.DISCONNECTED
-        log('HocuspocusProvider.event connection-error:', error)
+        },
       })
     })
   }
