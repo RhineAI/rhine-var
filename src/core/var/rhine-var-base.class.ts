@@ -469,13 +469,15 @@ export const RHINE_VAR_PREDEFINED_PROPERTIES = new Set<string | symbol>([
   '_type',
 
   '_initialize',
+  '_native',
+  '_parent',
 
-  'native',
   'json',
   'jsonString',
-  'parent',
+  'getParent',
   'isRoot',
-  'root',
+  'getRoot',
+  'getNative',
 
   '_options',
   '_connector',
