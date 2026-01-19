@@ -10,7 +10,7 @@ const state = rhineProxy(
     name: 'Rhine Var',
     items: [1, 2, 3],
   },
-  'ws://localhost:11600/task-common',
+  'wss://rvp.rhineai.com/task-common',
 )
 
 console.log(state.json())
@@ -25,7 +25,7 @@ state.afterSynced(() => {
   state.name = 'Updated Name'
   console.log('After name update:', state.name)
 
-  state.items.push(4)
+  state.items.push(5)
   console.log('After items.push(4):', state.items.json())
 
   console.log('\nFinal state:', state.json())
