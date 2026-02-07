@@ -52,7 +52,7 @@ export default abstract class Connector {
     })
   }
 
-  constructor(text = '') {}
+  constructor() {}
 
   hasState(): boolean {
     return this.yBaseMap?.has(Connector.STATE_KEY) ?? false

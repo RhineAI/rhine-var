@@ -6,4 +6,6 @@ export default interface ProxyOptions {
   undoManager?: boolean | UndoManagerOptions
 
   awareness?: boolean
+
+  token?: string
 }

@@ -3,7 +3,7 @@ import HocuspocusConnector from '@/core/connector/hocuspocus/hocuspocus-connecto
 export const PROTOCOL_LIST = ['ws://', 'wss://']
 export const DEFAULT_PUBLIC_URL = 'wss://rvp.rhineai.com/'
 
-export function createConnector(connectorText: string | number) {
+export function createConnector(connectorText: string | number, token?: string) {
   let text = String(connectorText)
 
   // Connector is String but not start with protocol
@@ -13,7 +13,7 @@ export function createConnector(connectorText: string | number) {
   }
 
   // Use HocuspocusConnector by default
-  const connector = new HocuspocusConnector(text)
+  const connector = new HocuspocusConnector()
   // const connector = new WebsocketConnector(text)
 
   // Environment check
@@ -21,7 +21,7 @@ export function createConnector(connectorText: string | number) {
   const isNode = typeof process !== 'undefined' && process.versions?.node
 
   if (isBrowser || isNode) {
-    connector.connect(String(text))
+    connector.connect(text, token)
   }
 
   return connector

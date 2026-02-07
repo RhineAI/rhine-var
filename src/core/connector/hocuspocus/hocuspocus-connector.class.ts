@@ -10,10 +10,11 @@ import { error, log } from '@/utils/logger'
 export default class HocuspocusConnector extends Connector {
   url = ''
   name = ''
+  token: string | undefined = undefined
 
   provider: HocuspocusProvider | null = null
 
-  async connect(text: string): Promise<void> {
+  async connect(text: string, token?: string): Promise<void> {
     const li = text.lastIndexOf('/')
     if (li == -1 || li == text.length - 1 || !text.startsWith('ws')) {
       error('HocuspocusConnector: UnSupport URL to connect room')
@@ -22,6 +23,7 @@ export default class HocuspocusConnector extends Connector {
 
     this.name = text.substring(li + 1)
     this.url = text.substring(0, li)
+    this.token = token
 
     this.yDoc = new YDoc()
     this.yBaseMap = this.yDoc.getMap()
@@ -31,6 +33,7 @@ export default class HocuspocusConnector extends Connector {
         url: this.url,
         name: this.name,
         document: this.yDoc!,
+        token: this.token,
         onStatus: ({ status }) => {
           this.status = status.toUpperCase() as ConnectorStatus
           log('HocuspocusProvider.event status:', status)

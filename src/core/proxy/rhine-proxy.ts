@@ -32,9 +32,8 @@ export function rhineProxy<T extends object>(
 
   // Create connector by string, number or direct
   if (typeof connector === 'string' || typeof connector === 'number') {
-    connector = createConnector(connector)
+    connector = createConnector(connector, options.token)
   }
-  connector = connector
 
   const root = object as any
   root._options = options
