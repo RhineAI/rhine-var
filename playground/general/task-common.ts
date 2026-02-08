@@ -1,8 +1,8 @@
-import { enableRhineVarLog, rhineProxy } from '../../src'
+import {enableRhineVarLog, EventType, rhineProxy, RvPath, StoredRhineVar} from '../../src'
 
 console.log('\n\n=================== Rhine Var Playground ===================\n\n')
 
-enableRhineVarLog(true)
+enableRhineVarLog(false)
 
 const state = rhineProxy(
   {
@@ -16,19 +16,25 @@ const state = rhineProxy(
 console.log(state.json())
 
 state.afterSynced(() => {
-  console.log('Initial state:', state.json())
 
-  // Test mutations
-  state.count++
-  console.log('After count++:', state.count)
+  state.subscribeDeep((
+    type: EventType,
+    path: RvPath,
+    value: any | StoredRhineVar,
+  ) => {
+    console.log('subscribeDeep', type, path, value)
+  })
 
-  state.name = 'Updated Name'
-  console.log('After name update:', state.name)
+  state.transact(() => {
+    console.log('Change count to 2')
+    state.count = 2
+    console.log('Change count to 3')
+    state.count = 3
+    console.log('Push item 4')
+    state.items.push(4)
+  })
 
-  state.items.push(5)
-  console.log('After items.push(4):', state.items.json())
-
-  console.log('\nFinal state:', state.json())
+  console.log(state.json())
 
   console.log('\nPlayground test completed successfully!')
 

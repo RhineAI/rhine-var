@@ -1,6 +1,6 @@
 {
   "name": "rhine-var",
-  "version": "2.4.3",
+  "version": "2.6.0",
   "description": "Variables that support multi-user collaboration and persistence, making collaboration and variable operations as simple as possible, with strict and well-defined type hints.",
   "exports": {
     ".": "./dist/index.js",

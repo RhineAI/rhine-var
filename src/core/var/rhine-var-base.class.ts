@@ -81,6 +81,14 @@ export default abstract class RhineVarBase<T extends object = any> {
     return this.getRoot()._clientId
   }
 
+  transact<K>(fn: (transaction: Transaction) => K, origin?: any): K {
+    const doc = this._native.doc
+    if (!doc) {
+      throw new Error('[RhineVar] Failed to execute transact: Doc not found.')
+    }
+    return doc.transact<K>(fn, origin)
+  }
+
   private _initialize(native: Native) {
     // initialize function will call after every synced
     if (RhineVarConfig.ENABLE_ERROR) {
@@ -508,6 +516,7 @@ export const RHINE_VAR_PREDEFINED_PROPERTIES = new Set<string | symbol>([
   'isRoot',
   'getRoot',
   'getNative',
+  'transact',
 
   '_options',
   '_connector',
